@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/listview_expense_item_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="0dp"
+        android:padding="3dp"
+        android:text="Date"
+        android:textSize="16dp"
+        android:textStyle="italic"
+        android:gravity="right" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/listview_expense_item_amount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="3dp"
+            android:text="Amount"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:id="@+id/listview_expense_item_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="3dp"
+            android:text="Category"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:layout_weight="0.5" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/listview_expense_item_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="0dp"
+        android:padding="3dp"
+        android:text="Description"
+        android:textSize="16dp" />
+
+
+    <TextView
+        android:id="@+id/listview_expense_item_people"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="0dp"
+        android:padding="3dp"
+        android:text="People"
+        android:textSize="16dp" />
+
+
+</LinearLayout>

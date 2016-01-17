@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="blu">#69D2E7</color>
+    <color name="orange">#F38630</color>
+    <color name="brightOrange">#FA6900</color>
+    <color name="pink">#FD2E58</color>
+    <color name="greenBlu">#2A788E</color>
+    <color name="navyBlu">#41547C</color>
+    <color name="purple">#433765</color>
+    <color name="maroon">#542437</color>
+    <color name="green">#53777A</color>
+    <color name="black">#090B1A</color>
+
+    <array name="expenseCategoryColors">
+        <item>@color/blu</item>
+        <item>@color/orange</item>
+        <item>@color/brightOrange</item>
+        <item>@color/pink</item>
+        <item>@color/greenBlu</item>
+        <item>@color/navyBlu</item>
+        <item>@color/purple</item>
+        <item>@color/maroon</item>
+        <item>@color/green</item>
+        <item>@color/black</item>
+    </array>
+</resources>
