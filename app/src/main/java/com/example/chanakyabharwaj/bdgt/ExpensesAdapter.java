@@ -1,21 +1,16 @@
 package com.example.chanakyabharwaj.bdgt;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-
-class ExpensesAdapter extends ArrayAdapter<Expense> {
+public class ExpensesAdapter extends ArrayAdapter<Expense> {
     int[] expenseCategoryColors = getContext().getResources().getIntArray(R.array.expenseCategoryColors);
 
     // View lookup cache
@@ -60,33 +55,5 @@ class ExpensesAdapter extends ArrayAdapter<Expense> {
 
         // Return the completed view to render on screen
         return convertView;
-    }
-}
-
-/**
- * A placeholder fragment containing a simple view.
- */
-public class MainActivityFragment extends Fragment {
-    ExpensesAdapter expensesAdapter;
-
-    public MainActivityFragment() {
-    }
-
-    void populateExpenses(ListView listView) {
-        ArrayList<Expense> expenses = Expense.getFakeData();
-        expensesAdapter = new ExpensesAdapter(getContext(), expenses);
-        listView.setAdapter(expensesAdapter);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        ListView listView_expenses = (ListView) rootView.findViewById(R.id.listview_expenses);
-        listView_expenses.addHeaderView(inflater.inflate(R.layout.listview_expense_header, container, false));
-        this.populateExpenses(listView_expenses);
-
-        return rootView;
     }
 }
