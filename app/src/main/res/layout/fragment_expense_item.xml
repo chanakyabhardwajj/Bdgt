@@ -1,19 +1,82 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/expense_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ooooo"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="80dp" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-    <Button
-        android:id="@+id/create_expense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="create expense" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/expense_time"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/expense_date"
+            android:text="Time" />
+
+        <TextView
+            android:id="@+id/expense_date"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Date" />
+
+        <TextView
+            android:id="@+id/label_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/expense_date"
+            android:text="Amount" />
+
+        <EditText
+            android:id="@+id/expense_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/expense_date"
+            android:layout_toRightOf="@+id/label_amount"
+            android:digits="0123456789.,"
+            android:inputType="numberDecimal"
+            android:text="0.0" />
+
+        <TextView
+            android:id="@+id/label_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/expense_amount"
+            android:text="Amount" />
+
+        <EditText
+            android:id="@+id/expense_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/expense_amount"
+            android:layout_toRightOf="@+id/label_amount"
+            android:inputType="text"
+            android:text="0.0" />
+
+        <Button
+            android:id="@+id/cancel_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/expense_description"
+            android:text="cancel" />
+
+        <Button
+            android:id="@+id/create_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/expense_description"
+            android:text="create expense" />
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,17 +1,16 @@
 package com.example.chanakyabharwaj.bdgt;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class TimePickerFragment extends DialogFragment
-        implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -20,12 +19,8 @@ public class TimePickerFragment extends DialogFragment
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
-        // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(getActivity(), this, hour, minute,
+        TimePickerDialog.OnTimeSetListener timeSetListener = (TimePickerDialog.OnTimeSetListener) getTargetFragment();
+        return new TimePickerDialog(getActivity(), timeSetListener, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
-    }
-
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Toast.makeText(getActivity().getApplicationContext(), Integer.toString(hourOfDay) + ":" + Integer.toString(minute), Toast.LENGTH_SHORT);
     }
 }

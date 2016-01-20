@@ -9,11 +9,11 @@ import java.util.Date;
 public class Expense {
     public ExpenseCategory category;
     public BigDecimal amount;
-    public Date date;
+    public long date;
     public int people;
     public String description;
 
-    public Expense(ExpenseCategory category, BigDecimal amount, Date date, int people, String description) {
+    public Expense(ExpenseCategory category, BigDecimal amount, long date, int people, String description) {
         this.category = category;
         this.amount = amount;
         this.date = date;
