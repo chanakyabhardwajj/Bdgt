@@ -46,8 +46,8 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.category.setText(expense.category.toString());
-        viewHolder.category.setBackgroundColor(expenseCategoryColors[expense.category.ordinal()]);
+        viewHolder.category.setText(expense.category);
+        viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
         viewHolder.amount.setText(expense.amount.toString());
         viewHolder.date.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(expense.date));
         viewHolder.people.setText(expense.people + "people");

@@ -15,7 +15,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ExpenseCategory.init();
         ExpenseStore.init();
+
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {

@@ -42,25 +42,50 @@
             android:layout_toRightOf="@+id/label_amount"
             android:digits="0123456789.,"
             android:inputType="numberDecimal"
-            android:text="0.0" />
+            android:text="0" />
+
+        <Spinner
+            android:id="@+id/expense_category"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/expense_amount"/>
 
         <TextView
             android:id="@+id/label_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/expense_amount"
-            android:text="Amount" />
+            android:layout_below="@+id/expense_category"
+            android:text="Description" />
 
         <EditText
             android:id="@+id/expense_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/expense_amount"
+            android:layout_below="@+id/expense_category"
             android:layout_toRightOf="@+id/label_amount"
             android:inputType="text"
-            android:text="0.0" />
+            android:text=".." />
+
+        <TextView
+            android:id="@+id/label_people"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/expense_description"
+            android:text="People" />
+
+        <EditText
+            android:id="@+id/expense_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/expense_description"
+            android:layout_toRightOf="@+id/label_people"
+            android:inputType="number"
+            android:text="1" />
 
         <Button
             android:id="@+id/cancel_expense"
