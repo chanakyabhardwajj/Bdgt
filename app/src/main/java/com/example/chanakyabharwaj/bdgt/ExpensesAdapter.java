@@ -13,15 +13,6 @@ import java.util.ArrayList;
 public class ExpensesAdapter extends ArrayAdapter<Expense> {
     int[] expenseCategoryColors = getContext().getResources().getIntArray(R.array.expenseCategoryColors);
 
-    // View lookup cache
-    private static class ViewHolder {
-        TextView category;
-        TextView amount;
-        TextView date;
-        TextView people;
-        TextView description;
-    }
-
     public ExpensesAdapter(Context context, ArrayList<Expense> users) {
         super(context, R.layout.listview_expense_item, users);
     }
@@ -39,21 +30,28 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
             viewHolder.category = (TextView) convertView.findViewById(R.id.listview_expense_item_category);
             viewHolder.amount = (TextView) convertView.findViewById(R.id.listview_expense_item_amount);
             viewHolder.date = (TextView) convertView.findViewById(R.id.listview_expense_item_date);
-            viewHolder.people = (TextView) convertView.findViewById(R.id.listview_expense_item_people);
             viewHolder.description = (TextView) convertView.findViewById(R.id.listview_expense_item_description);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         // Populate the data into the template view using the data object
         viewHolder.category.setText(expense.category);
         viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
         viewHolder.amount.setText(expense.amount.toString());
         viewHolder.date.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(expense.date));
-        viewHolder.people.setText(expense.people + "people");
         viewHolder.description.setText(expense.description);
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    // View lookup cache
+    private static class ViewHolder {
+        TextView category;
+        TextView amount;
+        TextView date;
+        TextView description;
     }
 }

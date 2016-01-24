@@ -58,17 +58,4 @@
         android:padding="3dp"
         android:text="Description"
         android:textSize="16dp" />
-
-
-    <TextView
-        android:id="@+id/listview_expense_item_people"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="0dp"
-        android:padding="3dp"
-        android:text="People"
-        android:textSize="16dp" />
-
-
 </LinearLayout>

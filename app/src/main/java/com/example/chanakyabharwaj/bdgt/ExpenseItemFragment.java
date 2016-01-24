@@ -3,12 +3,15 @@ package com.example.chanakyabharwaj.bdgt;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,11 +24,13 @@ import android.widget.TimePicker;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class ExpenseItemFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
+    //Data
     private Calendar expenseDateTime;
+
+    //Views
     private TextView expenseDateView;
     private TextView expenseTimeView;
     private EditText expenseAmountView;
@@ -38,7 +43,14 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         // Required empty public constructor
     }
 
+    public static void closeKeyboard(Context c, IBinder windowToken) {
+        InputMethodManager mgr = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(windowToken, 0);
+    }
+
     void setExpenseListFragment() {
+        closeKeyboard(getActivity(), expenseAmountView.getWindowToken());
+        MainActivity.activeExpense = null;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new ExpenseListFragment());
         transaction.addToBackStack(null);
@@ -73,14 +85,11 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        parent.getItemAtPosition(pos).toString();
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //
     }
 
     public void initializeDateView() {
@@ -103,20 +112,53 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         });
     }
 
+    public void initializeAmountView() {
+        if (MainActivity.activeExpense != null) {
+            expenseAmountView.setText(MainActivity.activeExpense.amount.toString());
+        }
+
+    }
+
+    public void initializeDescriptionView() {
+        if (MainActivity.activeExpense != null) {
+            expenseDescriptionView.setText(MainActivity.activeExpense.description);
+        }
+    }
+
     public void initializeCategorySpinner() {
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, ExpenseCategory.categories); //selected item will look like a spinner set from XML
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, ExpenseCategory.categories);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         expenseCategorySpinner.setAdapter(spinnerArrayAdapter);
+
+        if (MainActivity.activeExpense != null) {
+            expenseCategorySpinner.setSelection(ExpenseCategory.categories.indexOf(MainActivity.activeExpense.category));
+        }
     }
 
     public void initializeCreateButtonView() {
+        if (MainActivity.activeExpense != null) {
+            expenseCreateButtonView.setText("Update");
+        } else {
+            expenseCreateButtonView.setText("Create");
+        }
         expenseCreateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExpenseStore.add(new Expense(expenseCategorySpinner.getSelectedItem().toString(),
-                        new BigDecimal(expenseAmountView.getText().toString()),
-                        expenseDateTime.getTimeInMillis(), 1, expenseDescriptionView.getText().toString()));
-                setExpenseListFragment();
+                if (validateForm()) {
+                    if (MainActivity.activeExpense != null) {
+                        MainActivity.activeExpense.amount = new BigDecimal(expenseAmountView.getText().toString());
+                        MainActivity.activeExpense.category = expenseCategorySpinner.getSelectedItem().toString();
+                        MainActivity.activeExpense.date = expenseDateTime.getTimeInMillis();
+                        MainActivity.activeExpense.description = expenseDescriptionView.getText().toString();
+                    } else {
+                        ExpenseStore.add(new Expense(expenseCategorySpinner.getSelectedItem().toString(),
+                                        new BigDecimal(expenseAmountView.getText().toString()),
+                                        expenseDateTime.getTimeInMillis(),
+                                        expenseDescriptionView.getText().toString())
+                        );
+                    }
+                    setExpenseListFragment();
+                }
             }
         });
     }
@@ -130,12 +172,26 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         });
     }
 
+    public boolean validateForm() {
+        boolean valid = true;
+        if (expenseAmountView.getText().toString().length() == 0) {
+            valid = false;
+            expenseAmountView.setError("Please enter the amount");
+        } else {
+            expenseAmountView.setError(null);
+        }
+        return valid;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_expense_item, container, false);
 
         expenseDateTime = Calendar.getInstance();
+        if (MainActivity.activeExpense != null) {
+            expenseDateTime.setTimeInMillis(MainActivity.activeExpense.date);
+        }
 
         expenseDateView = (TextView) rootView.findViewById(R.id.expense_date);
         expenseTimeView = (TextView) rootView.findViewById(R.id.expense_time);
@@ -147,7 +203,9 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
         initializeDateView();
         initializeTimeView();
+        initializeAmountView();
         initializeCategorySpinner();
+        initializeDescriptionView();
         initializeCreateButtonView();
         initializeCancelButtonView();
 

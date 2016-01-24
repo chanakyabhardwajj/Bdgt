@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    public static Expense activeExpense = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
