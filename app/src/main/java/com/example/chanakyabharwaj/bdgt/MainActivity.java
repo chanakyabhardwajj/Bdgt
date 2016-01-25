@@ -3,11 +3,26 @@ package com.example.chanakyabharwaj.bdgt;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
+
+/*
+* TODO
+* delete expense
+* add categories
+* update categories -> update existing expenses
+* color generation logic for categories
+*
+* reminder notifciations
+* settings panel for category updates
+*/
+
 public class MainActivity extends AppCompatActivity {
-    public static Expense activeExpense = null;
+    public static int activeExpenseId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ExpenseCategory.init();
-        ExpenseStore.init();
-
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {

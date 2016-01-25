@@ -1,9 +1,10 @@
 package com.example.chanakyabharwaj.bdgt;
 
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -27,8 +28,7 @@ import java.util.Calendar;
 
 
 public class ExpenseItemFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
-    //Data
-    private Calendar expenseDateTime;
+    private Expense activeExpense;
 
     //Views
     private TextView expenseDateView;
@@ -50,7 +50,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     void setExpenseListFragment() {
         closeKeyboard(getActivity(), expenseAmountView.getWindowToken());
-        MainActivity.activeExpense = null;
+        MainActivity.activeExpenseId = -1;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new ExpenseListFragment());
         transaction.addToBackStack(null);
@@ -71,17 +71,17 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        expenseDateTime.set(Calendar.YEAR, year);
-        expenseDateTime.set(Calendar.MONTH, monthOfYear);
-        expenseDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        expenseDateView.setText(new SimpleDateFormat("dd MMM yyyy").format(expenseDateTime.getTime()));
+        activeExpense.date.set(Calendar.YEAR, year);
+        activeExpense.date.set(Calendar.MONTH, monthOfYear);
+        activeExpense.date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        expenseDateView.setText(new SimpleDateFormat("dd MMM yyyy").format(activeExpense.date.getTime()));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        expenseDateTime.set(Calendar.HOUR, hourOfDay);
-        expenseDateTime.set(Calendar.MINUTE, minute);
-        expenseTimeView.setText(new SimpleDateFormat("hh:mm a").format(expenseDateTime.getTime()));
+        activeExpense.date.set(Calendar.HOUR, hourOfDay);
+        activeExpense.date.set(Calendar.MINUTE, minute);
+        expenseTimeView.setText(new SimpleDateFormat("hh:mm a").format(activeExpense.date.getTime()));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     }
 
     public void initializeDateView() {
-        expenseDateView.setText(new SimpleDateFormat("dd MMM yyyy").format(expenseDateTime.getTime()));
+        expenseDateView.setText(new SimpleDateFormat("dd MMM yyyy").format(activeExpense.date.getTime()));
         expenseDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,7 +103,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     }
 
     public void initializeTimeView() {
-        expenseTimeView.setText(new SimpleDateFormat("hh:mm a").format(expenseDateTime.getTime()));
+        expenseTimeView.setText(new SimpleDateFormat("hh:mm a").format(activeExpense.date.getTime()));
         expenseTimeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,15 +113,14 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     }
 
     public void initializeAmountView() {
-        if (MainActivity.activeExpense != null) {
-            expenseAmountView.setText(MainActivity.activeExpense.amount.toString());
+        if (activeExpense.amount != null) {
+            expenseAmountView.setText(activeExpense.amount.toString());
         }
-
     }
 
     public void initializeDescriptionView() {
-        if (MainActivity.activeExpense != null) {
-            expenseDescriptionView.setText(MainActivity.activeExpense.description);
+        if (activeExpense.description != null) {
+            expenseDescriptionView.setText(activeExpense.description);
         }
     }
 
@@ -130,32 +129,30 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         expenseCategorySpinner.setAdapter(spinnerArrayAdapter);
 
-        if (MainActivity.activeExpense != null) {
-            expenseCategorySpinner.setSelection(ExpenseCategory.categories.indexOf(MainActivity.activeExpense.category));
+        if (activeExpense.category != null) {
+            expenseCategorySpinner.setSelection(ExpenseCategory.categories.indexOf(activeExpense.category));
         }
     }
 
     public void initializeCreateButtonView() {
-        if (MainActivity.activeExpense != null) {
+        if (MainActivity.activeExpenseId != -1) {
             expenseCreateButtonView.setText("Update");
         } else {
             expenseCreateButtonView.setText("Create");
         }
+
         expenseCreateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (validateForm()) {
-                    if (MainActivity.activeExpense != null) {
-                        MainActivity.activeExpense.amount = new BigDecimal(expenseAmountView.getText().toString());
-                        MainActivity.activeExpense.category = expenseCategorySpinner.getSelectedItem().toString();
-                        MainActivity.activeExpense.date = expenseDateTime.getTimeInMillis();
-                        MainActivity.activeExpense.description = expenseDescriptionView.getText().toString();
+                    activeExpense.setAmount(expenseAmountView.getText().toString());
+                    activeExpense.setCategory(expenseCategorySpinner.getSelectedItem().toString());
+                    activeExpense.setDescription(expenseDescriptionView.getText().toString());
+
+                    if (MainActivity.activeExpenseId != -1) {
+                        ExpenseDBHelper.getInstance(getContext()).updateExpense(activeExpense);
                     } else {
-                        ExpenseStore.add(new Expense(expenseCategorySpinner.getSelectedItem().toString(),
-                                        new BigDecimal(expenseAmountView.getText().toString()),
-                                        expenseDateTime.getTimeInMillis(),
-                                        expenseDescriptionView.getText().toString())
-                        );
+                        ExpenseDBHelper.getInstance(getContext()).addExpense(activeExpense);
                     }
                     setExpenseListFragment();
                 }
@@ -167,20 +164,22 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         expenseCancelButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MainActivity.activeExpenseId = -1;
+                activeExpense = null;
                 setExpenseListFragment();
             }
         });
     }
 
     public boolean validateForm() {
-        boolean valid = true;
-        if (expenseAmountView.getText().toString().length() == 0) {
-            valid = false;
-            expenseAmountView.setError("Please enter the amount");
-        } else {
+        try {
+            new BigDecimal(expenseAmountView.getText().toString());
             expenseAmountView.setError(null);
+            return true;
+        } catch (Exception e) {
+            expenseAmountView.setError("Please enter a valid amount.");
+            return false;
         }
-        return valid;
     }
 
     @Override
@@ -188,9 +187,16 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_expense_item, container, false);
 
-        expenseDateTime = Calendar.getInstance();
-        if (MainActivity.activeExpense != null) {
-            expenseDateTime.setTimeInMillis(MainActivity.activeExpense.date);
+        activeExpense = new Expense();
+        if (MainActivity.activeExpenseId != -1) {
+            Expense actualExpense = ExpenseDBHelper.getInstance(getContext()).getExpenseById(MainActivity.activeExpenseId);
+            activeExpense.setId(actualExpense._id);
+            activeExpense.setAmount(actualExpense.amount.toString());
+            activeExpense.setDescription(actualExpense.description);
+            activeExpense.setCategory(actualExpense.category);
+            activeExpense.setDate(actualExpense.date.getTimeInMillis());
+        } else {
+            activeExpense.setDate(Calendar.getInstance().getTimeInMillis());
         }
 
         expenseDateView = (TextView) rootView.findViewById(R.id.expense_date);

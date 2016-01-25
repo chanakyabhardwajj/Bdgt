@@ -4,15 +4,20 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ExpenseListFragment extends Fragment {
     ExpensesAdapter expensesAdapter;
+    ArrayList<Expense> allExpenses;
 
     public ExpenseListFragment() {
     }
@@ -25,13 +30,14 @@ public class ExpenseListFragment extends Fragment {
     }
 
     void populateExpenses(ListView listView) {
-        expensesAdapter = new ExpensesAdapter(getContext(), ExpenseStore.expenses);
+        allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
+        expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
         listView.setAdapter(expensesAdapter);
         listView.setClickable(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                MainActivity.activeExpense = ExpenseStore.expenses.get(position - 1);
+                MainActivity.activeExpenseId = allExpenses.get(position - 1)._id;
                 setExpenseItemFragment();
             }
         });
@@ -46,6 +52,7 @@ public class ExpenseListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MainActivity.activeExpenseId = -1;
                 setExpenseItemFragment();
             }
         });

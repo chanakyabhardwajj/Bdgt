@@ -40,7 +40,7 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
         viewHolder.category.setText(expense.category);
         viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
         viewHolder.amount.setText(expense.amount.toString());
-        viewHolder.date.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(expense.date));
+        viewHolder.date.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(expense.date.getTimeInMillis()));
         viewHolder.description.setText(expense.description);
 
         // Return the completed view to render on screen

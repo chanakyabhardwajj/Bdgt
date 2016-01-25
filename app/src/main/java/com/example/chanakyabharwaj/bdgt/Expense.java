@@ -1,17 +1,34 @@
 package com.example.chanakyabharwaj.bdgt;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 public class Expense {
+    public int _id;
     public String category;
     public BigDecimal amount;
-    public long date;
+    public Calendar date;
     public String description;
 
-    public Expense(String category, BigDecimal amount, long date, String description) {
+    public void setId(int _id) {
+        this._id = _id;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = new BigDecimal(amount);
+    }
+
+    public void setCategory(String category) {
         this.category = category;
-        this.amount = amount;
-        this.date = date;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setDate(long date) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(date);
+        this.date = c;
     }
 }
