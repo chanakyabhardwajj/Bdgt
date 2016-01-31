@@ -6,6 +6,7 @@
 
     <ListView
         android:id="@+id/listview_expenses"
+        android:background="@color/blu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
 
@@ -16,6 +17,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_18dp"
+        app:backgroundTint="@color/yellow"
         app:layout_anchor="@id/listview_expenses"
         app:layout_anchorGravity="bottom|right|end"
         app:rippleColor="@color/colorPrimaryDark" />

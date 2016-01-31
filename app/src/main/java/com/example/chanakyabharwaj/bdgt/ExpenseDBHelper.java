@@ -17,7 +17,7 @@ import java.util.List;
 public class ExpenseDBHelper extends SQLiteOpenHelper {
     private static ExpenseDBHelper dbInstance;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Expense.db";
 
     public static synchronized ExpenseDBHelper getInstance(Context context) {
@@ -118,6 +118,26 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         return cursorToExpense(cursor);
+    }
+
+    public ArrayList<String> getAllCategories() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String[] categoryColumn = {ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY};
+
+        ArrayList<String> categories = new ArrayList<String>();
+
+        Cursor cursor = db.query(ExpenseContract.ExpenseEntry.TABLE_NAME,
+                categoryColumn, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            categories.add(cursor.getString(cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY)));
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return categories;
     }
 
     private Expense cursorToExpense(Cursor cursor) {

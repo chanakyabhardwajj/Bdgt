@@ -1,63 +1,125 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/blu">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
         android:padding="20dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/expense_amount_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/expense_amount"
+        <LinearLayout
+            android:id="@+id/expense_top_layer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="0123456789.,"
-            android:hint="amount"
-            android:inputType="numberDecimal" />
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/expense_amount_wrapper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF">
+
+                <EditText
+                    android:id="@+id/expense_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="0123456789.,"
+                    android:hint="amount"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/white"
+                    android:textColorHint="#FFFFFF"
+                    android:textSize="50dp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/expense_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/expense_category"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:hint="Time"
+                    android:textColor="@color/white"
+                    android:textColorHint="#FFFFFF"
+                    android:textSize="18dp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/expense_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/expense_time"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:hint="Date"
+                    android:textColor="@color/white"
+                    android:textColorHint="#FFFFFF"
+                    android:textSize="18dp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/expense_category_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/expense_top_layer"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/white"
+            android:textColorHint="#FFFFFF">
+
+            <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/expense_category"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/expense_top_layer"
+
+                android:hint="category"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF"
+                android:textSize="30dp" />
         </android.support.design.widget.TextInputLayout>
 
-        <Spinner
-            android:id="@+id/expense_category"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/expense_amount_wrapper" />
-
-        <TextView
-            android:id="@+id/expense_time"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/expense_category"
-            android:hint="Time" />
-
-        <TextView
-            android:id="@+id/expense_date"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/expense_time"
-            android:hint="Date" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/expense_description_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/expense_date"
-            android:gravity="top|left">
-        <EditText
-            android:id="@+id/expense_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="description optional .."
-            android:inputType="textMultiLine"
-            android:lines="8"
-            android:maxLines="10"
-            android:minLines="6"
-            android:scrollbars="vertical" />
+            android:layout_below="@+id/expense_category_wrapper"
+            android:layout_marginTop="40dp"
+            android:gravity="top|left"
+            android:textColor="@color/white"
+            android:textColorHint="#FFFFFF">
+
+            <EditText
+                android:id="@+id/expense_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:hint="description optional .."
+                android:inputType="textMultiLine"
+                android:lines="6"
+                android:maxLines="6"
+                android:minLines="6"
+                android:scrollbars="vertical"
+                android:textColor="@color/white"
+                android:textColorHint="#FFFFFF" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -66,6 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/expense_description_wrapper"
+            android:layout_marginTop="40dp"
+            android:background="@color/white"
             android:text="cancel" />
 
         <Button
@@ -74,6 +138,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/expense_description_wrapper"
+            android:layout_marginTop="40dp"
+            android:background="@color/yellow"
             android:text="create" />
     </RelativeLayout>
 

@@ -8,7 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ExpensesAdapter extends ArrayAdapter<Expense> {
     int[] expenseCategoryColors = getContext().getResources().getIntArray(R.array.expenseCategoryColors);
@@ -30,6 +32,7 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
             viewHolder.category = (TextView) convertView.findViewById(R.id.listview_expense_item_category);
             viewHolder.amount = (TextView) convertView.findViewById(R.id.listview_expense_item_amount);
             viewHolder.date = (TextView) convertView.findViewById(R.id.listview_expense_item_date);
+            viewHolder.time = (TextView) convertView.findViewById(R.id.listview_expense_item_time);
             viewHolder.description = (TextView) convertView.findViewById(R.id.listview_expense_item_description);
             convertView.setTag(viewHolder);
         } else {
@@ -38,9 +41,10 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
 
         // Populate the data into the template view using the data object
         viewHolder.category.setText(expense.category);
-        viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
+//        viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
         viewHolder.amount.setText(expense.amount.toString());
-        viewHolder.date.setText(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(expense.date.getTimeInMillis()));
+        viewHolder.date.setText(new SimpleDateFormat("dd MMM").format(expense.date.getTime()));
+        viewHolder.time.setText(new SimpleDateFormat("hh:mm a").format(expense.date.getTime()));
         viewHolder.description.setText(expense.description);
 
         // Return the completed view to render on screen
@@ -52,6 +56,7 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
         TextView category;
         TextView amount;
         TextView date;
+        TextView time;
         TextView description;
     }
 }

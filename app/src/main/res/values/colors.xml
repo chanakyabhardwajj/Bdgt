@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="blu">#69D2E7</color>
+    <color name="blu">#2274A5</color>
     <color name="orange">#F38630</color>
     <color name="brightOrange">#FA6900</color>
     <color name="pink">#FD2E58</color>
@@ -11,8 +11,12 @@
     <color name="navyBlu">#41547C</color>
     <color name="purple">#433765</color>
     <color name="maroon">#542437</color>
-    <color name="green">#53777A</color>
+    <color name="green">#32936F</color>
     <color name="black">#090B1A</color>
+    <color name="yellow">#FFD006</color>
+    <color name="grey">#C6C8C9</color>
+    <color name="white">#FFFFFF</color>
+
 
     <array name="expenseCategoryColors">
         <item>@color/blu</item>
