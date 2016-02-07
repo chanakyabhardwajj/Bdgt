@@ -17,7 +17,7 @@ import java.util.List;
 public class ExpenseDBHelper extends SQLiteOpenHelper {
     private static ExpenseDBHelper dbInstance;
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Expense.db";
 
     public static synchronized ExpenseDBHelper getInstance(Context context) {
@@ -120,6 +120,18 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
         return cursorToExpense(cursor);
     }
 
+    public int deleteExpense(Expense expense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String[] allColumns = {ExpenseContract.ExpenseEntry._ID,
+                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT,
+                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY,
+                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DESCRIPTION,
+                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE};
+
+        return db.delete(ExpenseContract.ExpenseEntry.TABLE_NAME, ExpenseContract.ExpenseEntry._ID + "=" + expense._id, null);
+    }
+
     public ArrayList<String> getAllCategories() {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -127,8 +139,8 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
 
         ArrayList<String> categories = new ArrayList<String>();
 
-        Cursor cursor = db.query(ExpenseContract.ExpenseEntry.TABLE_NAME,
-                categoryColumn, null, null, null, null, null);
+        Cursor cursor = db.query(true, ExpenseContract.ExpenseEntry.TABLE_NAME,
+                categoryColumn, null, null, ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

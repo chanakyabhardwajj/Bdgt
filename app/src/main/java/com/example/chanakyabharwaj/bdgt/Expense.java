@@ -3,7 +3,7 @@ package com.example.chanakyabharwaj.bdgt;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-public class Expense {
+public class Expense implements Comparable<Expense> {
     public int _id;
     public String category;
     public BigDecimal amount;
@@ -30,5 +30,10 @@ public class Expense {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(date);
         this.date = c;
+    }
+
+    @Override
+    public int compareTo(Expense another) {
+        return this.date.compareTo(another.date);
     }
 }

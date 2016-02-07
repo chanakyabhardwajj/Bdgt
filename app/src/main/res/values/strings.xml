@@ -3,5 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ask_expense_delete">Delete this expense?</string>
+    <string name="yes_expense_delete">Yes</string>
+    <string name="no_expense_delete">No</string>
 </resources>

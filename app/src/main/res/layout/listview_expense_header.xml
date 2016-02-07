@@ -7,6 +7,5 @@
     android:background="@color/colorPrimary"
     android:allowUndo="false"
     android:gravity="center_horizontal"
-    android:textColor="#ffffff"
     android:padding="5dp"
     android:nestedScrollingEnabled="false" />

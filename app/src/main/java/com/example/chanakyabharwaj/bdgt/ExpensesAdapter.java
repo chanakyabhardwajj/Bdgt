@@ -1,10 +1,18 @@
 package com.example.chanakyabharwaj.bdgt;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -13,16 +21,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ExpensesAdapter extends ArrayAdapter<Expense> {
-    int[] expenseCategoryColors = getContext().getResources().getIntArray(R.array.expenseCategoryColors);
-
-    public ExpensesAdapter(Context context, ArrayList<Expense> users) {
-        super(context, R.layout.listview_expense_item, users);
+    public ExpensesAdapter(Context context, ArrayList<Expense> expenses) {
+        super(context, R.layout.listview_expense_item, expenses);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Expense expense = getItem(position);
+        final Expense expense = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -34,18 +40,40 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
             viewHolder.date = (TextView) convertView.findViewById(R.id.listview_expense_item_date);
             viewHolder.time = (TextView) convertView.findViewById(R.id.listview_expense_item_time);
             viewHolder.description = (TextView) convertView.findViewById(R.id.listview_expense_item_description);
+            viewHolder.deleteIcon = (ImageView) convertView.findViewById(R.id.listview_expense_item_delete_icon);
+
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         // Populate the data into the template view using the data object
-        viewHolder.category.setText(expense.category);
-//        viewHolder.category.setBackgroundColor(expenseCategoryColors[ExpenseCategory.categories.indexOf(expense.category)]);
-        viewHolder.amount.setText(expense.amount.toString());
+        if (expense.category.length() > 0) {
+            viewHolder.category.setText(expense.category);
+        } else {
+            viewHolder.category.setText("uncategorized");
+        }
+
+        viewHolder.amount.setText(expense.amount.toString() + "€");
         viewHolder.date.setText(new SimpleDateFormat("dd MMM").format(expense.date.getTime()));
         viewHolder.time.setText(new SimpleDateFormat("hh:mm a").format(expense.date.getTime()));
         viewHolder.description.setText(expense.description);
+        viewHolder.deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                builder.setTitle(R.string.ask_expense_delete);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ExpenseDBHelper.getInstance(getContext()).deleteExpense(expense);
+                        remove(expense);
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.create().show();
+            }
+        });
 
         // Return the completed view to render on screen
         return convertView;
@@ -58,5 +86,6 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> {
         TextView date;
         TextView time;
         TextView description;
+        ImageView deleteIcon;
     }
 }

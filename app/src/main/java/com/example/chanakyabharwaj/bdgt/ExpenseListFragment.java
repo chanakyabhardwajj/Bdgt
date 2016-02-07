@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -31,6 +33,7 @@ public class ExpenseListFragment extends Fragment {
 
     void populateExpenses(ListView listView) {
         allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
+        Collections.sort(allExpenses);
         expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
         listView.setAdapter(expensesAdapter);
         listView.setClickable(true);

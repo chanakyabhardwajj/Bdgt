@@ -1,67 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/blu"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="fill_parent">
 
-    <LinearLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/listview_expense_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="14sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/listview_expense_item_time"
+            android:layout_toRightOf="@+id/listview_expense_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textSize="14sp"
+            android:textStyle="italic" />
+
+        <ImageView
+            android:id="@+id/listview_expense_item_edit_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_edit_black_18dp"></ImageView>
+
+        <ImageView
+            android:id="@+id/listview_expense_item_delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/listview_expense_item_edit_icon"
+            android:src="@drawable/ic_delete_black_18dp"></ImageView>
 
         <TextView
             android:id="@+id/listview_expense_item_amount"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_below="@+id/listview_expense_item_time"
             android:text="Amount"
-            android:textColor="@color/white"
-            android:textSize="45dp" />
+            android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+
+        <TextView
+            android:id="@+id/listview_expense_item_category"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:orientation="vertical">
+            android:layout_below="@+id/listview_expense_item_amount"
+            android:text="Category"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/listview_expense_item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textStyle="italic" />
+        <TextView
+            android:id="@+id/listview_expense_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/listview_expense_item_category"
+            android:text="Description"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/listview_expense_item_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Date"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textStyle="italic" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/listview_expense_item_category"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Category"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
-
-    <TextView
-        android:id="@+id/listview_expense_item_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="10dp"
-        android:text="Description"
-        android:textColor="@color/white"
-        android:textSize="16dp" />
-</LinearLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
