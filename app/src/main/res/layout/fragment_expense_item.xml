@@ -70,14 +70,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_top_layer">
 
-                <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                <com.example.chanakyabharwaj.bdgt.InstantAutoComplete xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/expense_category"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/expense_top_layer"
-
-                    android:hint="category"
-                    android:textSize="30dp" />
+                    android:completionThreshold="1"
+                    android:hint="category" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -85,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/expense_category_wrapper"
+                android:layout_below="@+id/expense_top_layer"
                 android:layout_marginTop="40dp"
                 android:gravity="top|left">
 

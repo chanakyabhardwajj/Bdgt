@@ -2,9 +2,7 @@ package com.example.chanakyabharwaj.bdgt;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -15,15 +13,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -38,7 +32,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     private TextView expenseDateView;
     private TextView expenseTimeView;
     private EditText expenseAmountView;
-    private AutoCompleteTextView expenseCategoryView;
+    private InstantAutoComplete expenseCategoryView;
     private EditText expenseDescriptionView;
     private Button expenseCreateButtonView;
     private Button expenseCancelButtonView;
@@ -130,7 +124,6 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     public void initializeCategoryView() {
         ArrayList<String> categories = ExpenseDBHelper.getInstance(getContext()).getAllCategories();
-//        categories.addAll(ExpenseCategory.categories);
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, categories);
         expenseCategoryView.setAdapter(adapter);
@@ -139,6 +132,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseCategoryView.setText(activeExpense.category);
         }
     }
+
 
     public void initializeCreateButtonView() {
         if (MainActivity.activeExpenseId != -1) {
@@ -208,7 +202,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         expenseDateView = (TextView) rootView.findViewById(R.id.expense_date);
         expenseTimeView = (TextView) rootView.findViewById(R.id.expense_time);
         expenseAmountView = (EditText) rootView.findViewById(R.id.expense_amount);
-        expenseCategoryView = (AutoCompleteTextView) rootView.findViewById(R.id.expense_category);
+        expenseCategoryView = (InstantAutoComplete) rootView.findViewById(R.id.expense_category);
         expenseDescriptionView = (EditText) rootView.findViewById(R.id.expense_description);
         expenseCreateButtonView = (Button) rootView.findViewById(R.id.create_expense);
         expenseCancelButtonView = (Button) rootView.findViewById(R.id.cancel_expense);

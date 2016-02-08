@@ -10,6 +10,17 @@ public class Expense implements Comparable<Expense> {
     public Calendar date;
     public String description;
 
+    public Expense(int id, String cat, BigDecimal amount, Calendar date, String description) {
+        this._id = id;
+        this.category = cat;
+        this.amount = amount;
+        this.date = date;
+        this.description = description;
+    }
+
+    public Expense() {
+    }
+
     public void setId(int _id) {
         this._id = _id;
     }
