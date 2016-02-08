@@ -26,7 +26,7 @@ import java.util.Calendar;
 
 
 public class ExpenseItemFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
-    private Expense activeExpense;
+    public static Expense activeExpense;
 
     //Views
     private TextView expenseDateView;

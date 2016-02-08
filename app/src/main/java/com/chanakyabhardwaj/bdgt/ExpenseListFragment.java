@@ -33,10 +33,10 @@ public class ExpenseListFragment extends Fragment {
     void populateExpenses(ListView listView) {
         allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
 
-        if (allExpenses.size() == 0) {
-            addFakeData();
-            allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
-        }
+//        if (allExpenses.size() == 0) {
+//            addFakeData();
+//            allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
+//        }
         Collections.sort(allExpenses);
         expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
         listView.setAdapter(expensesAdapter);

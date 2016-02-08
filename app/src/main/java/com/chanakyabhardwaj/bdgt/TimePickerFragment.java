@@ -12,13 +12,18 @@ public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current time as the default values for the picker
-        final Calendar c = Calendar.getInstance();
+        final Calendar c;
+
+        if (ExpenseItemFragment.activeExpense != null) {
+            c = ExpenseItemFragment.activeExpense.date;
+        } else {
+            c = Calendar.getInstance();
+        }
+
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
         TimePickerDialog.OnTimeSetListener timeSetListener = (TimePickerDialog.OnTimeSetListener) getTargetFragment();
-        return new TimePickerDialog(getActivity(), timeSetListener, hour, minute,
-                DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(getActivity(), timeSetListener, hour, minute, true);
     }
 }

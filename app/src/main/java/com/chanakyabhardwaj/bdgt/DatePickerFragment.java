@@ -13,13 +13,19 @@ import java.util.Calendar;
 public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
+        final Calendar c;
+
+        if (ExpenseItemFragment.activeExpense != null) {
+            c = ExpenseItemFragment.activeExpense.date;
+        } else {
+            c = Calendar.getInstance();
+        }
+
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog.OnDateSetListener dateSetListener = (DatePickerDialog.OnDateSetListener)getTargetFragment();
+        DatePickerDialog.OnDateSetListener dateSetListener = (DatePickerDialog.OnDateSetListener) getTargetFragment();
         return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
     }
 }

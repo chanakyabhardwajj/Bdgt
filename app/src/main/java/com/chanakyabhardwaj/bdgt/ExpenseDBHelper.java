@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ExpenseDBHelper extends SQLiteOpenHelper {
     private static ExpenseDBHelper dbInstance;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Expense.db";
 
     public static synchronized ExpenseDBHelper getInstance(Context context) {
