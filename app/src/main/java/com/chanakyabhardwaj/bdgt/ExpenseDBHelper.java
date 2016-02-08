@@ -1,4 +1,4 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chanakya.bharwaj on 24/01/16.

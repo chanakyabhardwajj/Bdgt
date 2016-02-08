@@ -1,4 +1,4 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
 import java.util.ArrayList;
 

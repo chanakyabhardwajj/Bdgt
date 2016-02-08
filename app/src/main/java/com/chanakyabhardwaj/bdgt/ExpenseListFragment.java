@@ -1,4 +1,4 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

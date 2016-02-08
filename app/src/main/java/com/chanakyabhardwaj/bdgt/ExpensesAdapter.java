@@ -1,24 +1,17 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class ExpensesAdapter extends ArrayAdapter<Expense> {
     public ExpensesAdapter(Context context, ArrayList<Expense> expenses) {

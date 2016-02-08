@@ -1,4 +1,4 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
 import android.provider.BaseColumns;
 

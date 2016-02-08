@@ -1,4 +1,4 @@
-package com.example.chanakyabharwaj.bdgt;
+package com.chanakyabhardwaj.bdgt;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;

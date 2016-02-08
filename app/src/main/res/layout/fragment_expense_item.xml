@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_top_layer">
 
-                <com.example.chanakyabharwaj.bdgt.InstantAutoComplete xmlns:android="http://schemas.android.com/apk/res/android"
+                <com.chanakyabhardwaj.bdgt.InstantAutoComplete xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/expense_category"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
