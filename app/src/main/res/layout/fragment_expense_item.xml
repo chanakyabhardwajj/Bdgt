@@ -1,4 +1,5 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="fill_parent">
@@ -13,78 +14,99 @@
             android:padding="20dp">
 
             <LinearLayout
-                android:id="@+id/expense_top_layer"
+                android:id="@+id/expense_datetime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/expense_amount_wrapper"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2">
-
-                    <EditText
-                        android:id="@+id/expense_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:digits="0123456789.,"
-                        android:hint="amount"
-                        android:inputType="numberDecimal" />
-                </android.support.design.widget.TextInputLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/expense_time"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="left"
+                    android:hint="Time"
+                    android:textStyle="italic" />
 
-                    <TextView
-                        android:id="@+id/expense_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:hint="Time"
-                        android:textSize="18dp"
-                        android:textStyle="italic" />
-
-                    <TextView
-                        android:id="@+id/expense_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="20dp"
-                        android:layout_weight="1"
-                        android:hint="Date"
-                        android:textSize="18dp"
-                        android:textStyle="italic" />
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/expense_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:hint="Date"
+                    android:textStyle="italic" />
             </LinearLayout>
 
+
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/expense_category_wrapper"
+                android:id="@+id/expense_amount_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_top_layer">
+                android:layout_below="@+id/expense_datetime">
 
-                <com.chanakyabhardwaj.bdgt.InstantAutoComplete xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/expense_category"
-                    android:layout_width="fill_parent"
+                <EditText
+                    android:id="@+id/expense_amount"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/expense_top_layer"
-                    android:completionThreshold="1"
-                    android:hint="category" />
+                    android:digits="0123456789.,"
+                    android:hint="amount"
+                    android:inputType="numberDecimal" />
             </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/expense_category_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/expense_amount_wrapper"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/expense_category_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/expense_category"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/expense_top_layer"
+                        android:completionThreshold="1"
+                        android:hint="category" />
+                </android.support.design.widget.TextInputLayout>
+
+                <co.lujun.androidtagview.TagContainerLayout
+                    android:id="@+id/expense_category_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    app:container_background_color="@android:color/transparent"
+                    app:container_border_color="@android:color/transparent"
+                    app:container_border_radius="0dp"
+                    app:container_border_width="0dp"
+                    app:container_enable_drag="false"
+                    app:container_gravity="center"
+                    app:horizontal_interval="15dp"
+                    app:tag_background_color="@android:color/transparent"
+                    app:tag_border_color="@android:color/transparent"
+                    app:tag_border_width="0dp"
+                    app:tag_clickable="true"
+                    app:tag_corner_radius="0dp"
+                    app:tag_horizontal_padding="5dp"
+                    app:tag_text_size="16dp"
+                    app:tag_theme="none"
+                    app:tag_vertical_padding="5dp"
+                    app:vertical_interval="15dp" />
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/expense_description_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/expense_category_wrapper"
+                android:layout_below="@+id/expense_category_row"
                 android:layout_marginTop="40dp"
                 android:gravity="top|left">
 
@@ -93,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
-                    android:hint="description optional .."
+                    android:hint="description optional.."
                     android:inputType="textMultiLine"
                     android:lines="6"
                     android:maxLines="6"

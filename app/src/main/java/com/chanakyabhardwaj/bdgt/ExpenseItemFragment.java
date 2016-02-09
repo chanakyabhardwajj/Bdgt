@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -23,6 +26,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import co.lujun.androidtagview.TagContainerLayout;
+import co.lujun.androidtagview.TagView;
 
 
 public class ExpenseItemFragment extends Fragment implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
@@ -32,7 +38,8 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     private TextView expenseDateView;
     private TextView expenseTimeView;
     private EditText expenseAmountView;
-    private InstantAutoComplete expenseCategoryView;
+    private TagContainerLayout expenseCategoryTags;
+    private EditText expenseCategoryView;
     private EditText expenseDescriptionView;
     private Button expenseCreateButtonView;
     private Button expenseCancelButtonView;
@@ -50,6 +57,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         closeKeyboard(getActivity(), expenseAmountView.getWindowToken());
         MainActivity.activeExpenseId = -1;
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         transaction.replace(R.id.fragment_container, new ExpenseListFragment());
         transaction.addToBackStack(null);
         transaction.commit();
@@ -77,7 +85,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        activeExpense.date.set(Calendar.HOUR, hourOfDay);
+        activeExpense.date.set(Calendar.HOUR_OF_DAY, hourOfDay);
         activeExpense.date.set(Calendar.MINUTE, minute);
         expenseTimeView.setText(new SimpleDateFormat("hh:mm a").format(activeExpense.date.getTime()));
     }
@@ -124,13 +132,37 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     public void initializeCategoryView() {
         ArrayList<String> categories = ExpenseDBHelper.getInstance(getContext()).getAllCategories();
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, categories);
-        expenseCategoryView.setAdapter(adapter);
-
         if (activeExpense.category != null) {
             expenseCategoryView.setText(activeExpense.category);
         }
+
+        /*expenseCategoryView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    expenseCategoryTags.setVisibility(View.GONE);
+                } else {
+                    expenseCategoryTags.setVisibility(View.VISIBLE);
+                    expenseCategoryTags.setAlpha(0.0f);
+                    expenseCategoryTags.animate()
+                            .translationY(expenseCategoryTags.getHeight())
+                            .alpha(1.0f);
+                }
+            }
+        });*/
+
+
+        expenseCategoryTags.setOnTagClickListener(new TagView.OnTagClickListener() {
+            @Override
+            public void onTagClick(int position, String text) {
+                expenseCategoryView.setText(text);
+            }
+
+            @Override
+            public void onTagLongClick(final int position, String text) {
+            }
+        });
+
+        expenseCategoryTags.setTags(categories);
     }
 
 
@@ -202,7 +234,8 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         expenseDateView = (TextView) rootView.findViewById(R.id.expense_date);
         expenseTimeView = (TextView) rootView.findViewById(R.id.expense_time);
         expenseAmountView = (EditText) rootView.findViewById(R.id.expense_amount);
-        expenseCategoryView = (InstantAutoComplete) rootView.findViewById(R.id.expense_category);
+        expenseCategoryView = (EditText) rootView.findViewById(R.id.expense_category);
+        expenseCategoryTags = (TagContainerLayout) rootView.findViewById(R.id.expense_category_tags);
         expenseDescriptionView = (EditText) rootView.findViewById(R.id.expense_description);
         expenseCreateButtonView = (Button) rootView.findViewById(R.id.create_expense);
         expenseCancelButtonView = (Button) rootView.findViewById(R.id.cancel_expense);

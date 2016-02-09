@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Collections;
 
 public class ExpenseListFragment extends Fragment {
     ExpensesAdapter expensesAdapter;
+    TextView emptyMessageView;
     ArrayList<Expense> allExpenses;
 
     public ExpenseListFragment() {
@@ -25,26 +27,25 @@ public class ExpenseListFragment extends Fragment {
 
     void setExpenseItemFragment() {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         transaction.replace(R.id.fragment_container, new ExpenseItemFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     void populateExpenses(ListView listView) {
+        listView.setEmptyView(emptyMessageView);
         allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
-
-//        if (allExpenses.size() == 0) {
-//            addFakeData();
-//            allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
-//        }
         Collections.sort(allExpenses);
+//        addFakeData();
         expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
         listView.setAdapter(expensesAdapter);
+
         listView.setClickable(true);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                MainActivity.activeExpenseId = allExpenses.get(position - 1)._id;
+                MainActivity.activeExpenseId = allExpenses.get(position)._id;
                 setExpenseItemFragment();
             }
         });
@@ -80,7 +81,7 @@ public class ExpenseListFragment extends Fragment {
         });
 
         ListView listView_expenses = (ListView) rootView.findViewById(R.id.listview_expenses);
-        listView_expenses.addHeaderView(inflater.inflate(R.layout.listview_expense_header, null, false));
+        emptyMessageView = (TextView) rootView.findViewById(R.id.listview_empty_message);
         populateExpenses(listView_expenses);
         return rootView;
     }

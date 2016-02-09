@@ -4,6 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/listview_empty_message"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:text="@string/empty_message" />
+
     <ListView
         android:id="@+id/listview_expenses"
         android:layout_width="match_parent"
