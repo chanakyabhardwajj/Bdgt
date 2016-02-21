@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ExpenseDBHelper extends SQLiteOpenHelper {
     private static ExpenseDBHelper dbInstance;
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Expense.db";
 
     public static synchronized ExpenseDBHelper getInstance(Context context) {
@@ -119,16 +119,9 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
         return cursorToExpense(cursor);
     }
 
-    public int deleteExpense(Expense expense) {
+    public int deleteExpenseById(int expenseId) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        String[] allColumns = {ExpenseContract.ExpenseEntry._ID,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DESCRIPTION,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE};
-
-        return db.delete(ExpenseContract.ExpenseEntry.TABLE_NAME, ExpenseContract.ExpenseEntry._ID + "=" + expense._id, null);
+        return db.delete(ExpenseContract.ExpenseEntry.TABLE_NAME, ExpenseContract.ExpenseEntry._ID + "=" + expenseId, null);
     }
 
     public ArrayList<String> getAllCategories() {

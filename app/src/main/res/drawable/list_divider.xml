@@ -1,0 +1,9 @@
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="@dimen/activity_horizontal_margin"
+    android:insetRight="@dimen/activity_horizontal_margin" >
+
+    <shape android:shape="rectangle" >
+        <solid android:color="@color/colorPrimary" />
+    </shape>
+
+</inset>

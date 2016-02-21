@@ -9,9 +9,6 @@ import android.view.MenuItem;
 
 /*
 * TODO
-* delete expense
-* add categories
-* update categories -> update existing expenses
 * color generation logic for categories
 *
 * reminder notifciations

@@ -3,11 +3,14 @@ package com.chanakyabhardwaj.bdgt;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -41,8 +45,9 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     private TagContainerLayout expenseCategoryTags;
     private EditText expenseCategoryView;
     private EditText expenseDescriptionView;
-    private Button expenseCreateButtonView;
-    private Button expenseCancelButtonView;
+    private TextView expenseCreateButtonView;
+    private TextView expenseCancelButtonView;
+    private TextView expenseDeleteButtonView;
 
     public ExpenseItemFragment() {
         // Required empty public constructor
@@ -56,6 +61,8 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
     void setExpenseListFragment() {
         closeKeyboard(getActivity(), expenseAmountView.getWindowToken());
         MainActivity.activeExpenseId = -1;
+        activeExpense = null;
+
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         transaction.replace(R.id.fragment_container, new ExpenseListFragment());
@@ -136,30 +143,16 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseCategoryView.setText(activeExpense.category);
         }
 
-        /*expenseCategoryView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    expenseCategoryTags.setVisibility(View.GONE);
-                } else {
-                    expenseCategoryTags.setVisibility(View.VISIBLE);
-                    expenseCategoryTags.setAlpha(0.0f);
-                    expenseCategoryTags.animate()
-                            .translationY(expenseCategoryTags.getHeight())
-                            .alpha(1.0f);
-                }
-            }
-        });*/
-
-
         expenseCategoryTags.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(int position, String text) {
                 expenseCategoryView.setText(text);
+                expenseCategoryView.setSelection(expenseCategoryView.getText().length());
+                expenseCategoryView.requestFocus();
             }
 
             @Override
-            public void onTagLongClick(final int position, String text) {
-            }
+            public void onTagLongClick(final int position, String text) {}
         });
 
         expenseCategoryTags.setTags(categories);
@@ -168,26 +161,15 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     public void initializeCreateButtonView() {
         if (MainActivity.activeExpenseId != -1) {
-            expenseCreateButtonView.setText("Update");
+            expenseCreateButtonView.setText(R.string.update_expense_button);
         } else {
-            expenseCreateButtonView.setText("Create");
+            expenseCreateButtonView.setText(R.string.create_expense_button);
         }
 
         expenseCreateButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateForm()) {
-                    activeExpense.setAmount(expenseAmountView.getText().toString());
-                    activeExpense.setCategory(expenseCategoryView.getText().toString());
-                    activeExpense.setDescription(expenseDescriptionView.getText().toString());
-
-                    if (MainActivity.activeExpenseId != -1) {
-                        ExpenseDBHelper.getInstance(getContext()).updateExpense(activeExpense);
-                    } else {
-                        ExpenseDBHelper.getInstance(getContext()).addExpense(activeExpense);
-                    }
-                    setExpenseListFragment();
-                }
+                createOrUpdateExpense();
             }
         });
     }
@@ -196,11 +178,34 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         expenseCancelButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.activeExpenseId = -1;
-                activeExpense = null;
                 setExpenseListFragment();
             }
         });
+    }
+
+    public void initializeDeleteButtonView() {
+        if (MainActivity.activeExpenseId != -1) {
+            expenseDeleteButtonView.setVisibility(View.VISIBLE);
+
+            expenseDeleteButtonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setCancelable(true);
+                    builder.setTitle(R.string.ask_expense_delete);
+                    builder.setPositiveButton(R.string.yes_expense_delete, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ExpenseDBHelper.getInstance(getContext()).deleteExpenseById(MainActivity.activeExpenseId);
+                            setExpenseListFragment();
+                        }
+                    });
+                    builder.create().show();
+                }
+            });
+        } else {
+            expenseDeleteButtonView.setVisibility(View.GONE);
+        }
+
     }
 
     public boolean validateForm() {
@@ -209,8 +214,23 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseAmountView.setError(null);
             return true;
         } catch (Exception e) {
-            expenseAmountView.setError("Please enter a valid amount.");
+            expenseAmountView.setError(getText(R.string.amount_error_message));
             return false;
+        }
+    }
+
+    public void createOrUpdateExpense() {
+        if (validateForm()) {
+            activeExpense.setAmount(expenseAmountView.getText().toString());
+            activeExpense.setCategory(expenseCategoryView.getText().toString());
+            activeExpense.setDescription(expenseDescriptionView.getText().toString());
+
+            if (MainActivity.activeExpenseId != -1) {
+                ExpenseDBHelper.getInstance(getContext()).updateExpense(activeExpense);
+            } else {
+                ExpenseDBHelper.getInstance(getContext()).addExpense(activeExpense);
+            }
+            setExpenseListFragment();
         }
     }
 
@@ -237,8 +257,9 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         expenseCategoryView = (EditText) rootView.findViewById(R.id.expense_category);
         expenseCategoryTags = (TagContainerLayout) rootView.findViewById(R.id.expense_category_tags);
         expenseDescriptionView = (EditText) rootView.findViewById(R.id.expense_description);
-        expenseCreateButtonView = (Button) rootView.findViewById(R.id.create_expense);
-        expenseCancelButtonView = (Button) rootView.findViewById(R.id.cancel_expense);
+        expenseCreateButtonView = (TextView) rootView.findViewById(R.id.create_expense);
+        expenseCancelButtonView = (TextView) rootView.findViewById(R.id.cancel_expense);
+        expenseDeleteButtonView = (TextView) rootView.findViewById(R.id.delete_expense);
 
         initializeDateView();
         initializeTimeView();
@@ -247,6 +268,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
         initializeDescriptionView();
         initializeCreateButtonView();
         initializeCancelButtonView();
+        initializeDeleteButtonView();
 
         return rootView;
     }

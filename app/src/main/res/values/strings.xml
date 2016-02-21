@@ -1,10 +1,18 @@
 <resources>
-    <string name="app_name">Bdgt</string>
+    <string name="app_name">Budget</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="amount_error_message">"Please enter a valid amount."</string>
+
     <string name="empty_message">You have not added any expenses.\n Go ahead and add some.</string>
+
     <string name="ask_expense_delete">Delete this expense?</string>
     <string name="yes_expense_delete">Yes</string>
     <string name="no_expense_delete">No</string>
+
+    <string name="create_expense_button">CREATE</string>
+    <string name="delete_expense_button">DELETE</string>
+    <string name="update_expense_button">UPDATE</string>
+    <string name="cancel_expense_button">CANCEL</string>
 </resources>

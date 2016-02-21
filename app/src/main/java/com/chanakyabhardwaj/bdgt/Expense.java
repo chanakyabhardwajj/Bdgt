@@ -45,6 +45,6 @@ public class Expense implements Comparable<Expense> {
 
     @Override
     public int compareTo(Expense another) {
-        return this.date.compareTo(another.date);
+        return -1 * this.date.compareTo(another.date);
     }
 }

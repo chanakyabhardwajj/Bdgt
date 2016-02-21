@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/black">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -11,7 +12,7 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp">
+            android:padding="@dimen/activity_vertical_margin">
 
             <LinearLayout
                 android:id="@+id/expense_datetime"
@@ -25,8 +26,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left"
-                    android:hint="Time"
-                    android:textStyle="italic" />
+                    android:hint="Time" />
 
                 <TextView
                     android:id="@+id/expense_date"
@@ -34,8 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:hint="Date"
-                    android:textStyle="italic" />
+                    android:hint="Date" />
             </LinearLayout>
 
 
@@ -43,7 +42,8 @@
                 android:id="@+id/expense_amount_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/expense_datetime">
+                android:layout_below="@+id/expense_datetime"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
 
                 <EditText
                     android:id="@+id/expense_amount"
@@ -51,7 +51,8 @@
                     android:layout_height="wrap_content"
                     android:digits="0123456789.,"
                     android:hint="amount"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
@@ -59,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_amount_wrapper"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
@@ -73,7 +75,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/expense_top_layer"
                         android:completionThreshold="1"
-                        android:hint="category" />
+                        android:hint="category"
+                        android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
                 <co.lujun.androidtagview.TagContainerLayout
@@ -87,7 +90,7 @@
                     app:container_border_radius="0dp"
                     app:container_border_width="0dp"
                     app:container_enable_drag="false"
-                    app:container_gravity="center"
+                    app:container_gravity="left"
                     app:horizontal_interval="15dp"
                     app:tag_background_color="@android:color/transparent"
                     app:tag_border_color="@android:color/transparent"
@@ -95,10 +98,11 @@
                     app:tag_clickable="true"
                     app:tag_corner_radius="0dp"
                     app:tag_horizontal_padding="5dp"
+                    app:tag_text_color="#cccccc"
                     app:tag_text_size="16dp"
                     app:tag_theme="none"
                     app:tag_vertical_padding="5dp"
-                    app:vertical_interval="15dp" />
+                    app:vertical_interval="@dimen/activity_vertical_margin" />
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -107,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/expense_category_row"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:gravity="top|left">
 
                 <EditText
@@ -117,29 +121,90 @@
                     android:gravity="top"
                     android:hint="description optional.."
                     android:inputType="textMultiLine"
-                    android:lines="6"
-                    android:maxLines="6"
-                    android:minLines="6"
+                    android:lines="3"
+                    android:maxLines="3"
+                    android:minLines="3"
                     android:scrollbars="vertical" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/cancel_expense"
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/delete_expense_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/expense_description_wrapper"
-                android:layout_marginTop="40dp"
-                android:text="cancel" />
+                android:layout_margin="6dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                card_view:cardBackgroundColor="@color/colorAccent"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="6dp">
 
-            <Button
-                android:id="@+id/create_expense"
+                <TextView
+                    android:id="@+id/delete_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8.5dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8.5dp"
+                    android:text="@string/delete_expense_button" />
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/expense_description_wrapper"
+                android:layout_margin="6dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_toLeftOf="@+id/create_expense_card"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="6dp">
+
+                <TextView
+                    android:id="@+id/cancel_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8.5dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8.5dp"
+                    android:text="@string/cancel_expense_button"
+                    android:textColor="@color/black" />
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/create_expense_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/expense_description_wrapper"
-                android:layout_marginTop="40dp"
-                android:text="create" />
+                android:layout_margin="6dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="6dp">
+
+                <TextView
+                    android:id="@+id/create_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8.5dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8.5dp"
+                    android:text="@string/create_expense_button" />
+
+            </android.support.v7.widget.CardView>
 
         </RelativeLayout>
     </ScrollView>

@@ -4,19 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listview_empty_message"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:textSize="20dp"
-        android:text="@string/empty_message" />
+        android:text="@string/empty_message"
+        android:textSize="20dp" />
 
-    <ListView
-        android:id="@+id/listview_expenses"
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/stickylistview_expenses"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -25,6 +24,6 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_18dp"
-        app:layout_anchor="@id/listview_expenses"
+        app:layout_anchor="@id/stickylistview_expenses"
         app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>

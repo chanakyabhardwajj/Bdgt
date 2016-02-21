@@ -1,11 +1,12 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/Widget.TextView.Custom</item>
+        <item name="android:editTextStyle">@style/Widget.EditText.Custom</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -19,6 +20,12 @@
 
     <style name="Widget.TextView.Custom" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="Widget.EditText.Custom" parent="@android:style/Widget.EditText">
+        <item name="android:textAppearance">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:editTextColor">@color/textColorPrimary</item>
     </style>
 
 </resources>

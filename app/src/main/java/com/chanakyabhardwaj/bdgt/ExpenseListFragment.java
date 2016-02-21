@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 
 public class ExpenseListFragment extends Fragment {
     ExpensesAdapter expensesAdapter;
     TextView emptyMessageView;
+    StickyListHeadersListView stickyList;
     ArrayList<Expense> allExpenses;
 
     public ExpenseListFragment() {
@@ -33,16 +36,20 @@ public class ExpenseListFragment extends Fragment {
         transaction.commit();
     }
 
-    void populateExpenses(ListView listView) {
-        listView.setEmptyView(emptyMessageView);
+    void populateStickyExpenses(StickyListHeadersListView stickyListView) {
+        stickyListView.setEmptyView(emptyMessageView);
         allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
+        if (allExpenses.size() < 10) {
+            addFakeData();
+            allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
+        }
         Collections.sort(allExpenses);
-//        addFakeData();
-        expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
-        listView.setAdapter(expensesAdapter);
 
-        listView.setClickable(true);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
+        stickyListView.setAdapter(expensesAdapter);
+
+        stickyListView.setClickable(true);
+        stickyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 MainActivity.activeExpenseId = allExpenses.get(position)._id;
@@ -53,17 +60,30 @@ public class ExpenseListFragment extends Fragment {
 
     void addFakeData() {
         ExpenseDBHelper db = ExpenseDBHelper.getInstance(getContext());
-        db.addExpense(new Expense(1, ExpenseCategory.categories.get(0), new BigDecimal(15), Calendar.getInstance(), "Kiez klein"));
-        db.addExpense(new Expense(2, ExpenseCategory.categories.get(1), new BigDecimal(50), Calendar.getInstance(), "new jacket"));
-        db.addExpense(new Expense(3, ExpenseCategory.categories.get(2), new BigDecimal(6), Calendar.getInstance(), "morning Coffee"));
-        db.addExpense(new Expense(4, ExpenseCategory.categories.get(3), new BigDecimal(10), Calendar.getInstance(), "BioMarket"));
-        db.addExpense(new Expense(5, ExpenseCategory.categories.get(4), new BigDecimal(25), Calendar.getInstance(), "Pizza"));
-        db.addExpense(new Expense(6, ExpenseCategory.categories.get(5), new BigDecimal(10), Calendar.getInstance(), "impala coffee"));
-        db.addExpense(new Expense(7, ExpenseCategory.categories.get(6), new BigDecimal(15), Calendar.getInstance(), "Saturday groceries"));
-        db.addExpense(new Expense(8, ExpenseCategory.categories.get(7), new BigDecimal(5.5), Calendar.getInstance(), "Pasta bar"));
-        db.addExpense(new Expense(9, ExpenseCategory.categories.get(0), new BigDecimal(3), Calendar.getInstance(), "bio market"));
-        db.addExpense(new Expense(10, ExpenseCategory.categories.get(0), new BigDecimal(9), Calendar.getInstance(), "U bahn"));
-        db.addExpense(new Expense(11, ExpenseCategory.categories.get(2), new BigDecimal(5), Calendar.getInstance(), "Beer with friends"));
+        Calendar c = Calendar.getInstance();
+
+        c.set(2016, Calendar.FEBRUARY, 10);
+        db.addExpense(new Expense(1, ExpenseCategory.categories.get(0), new BigDecimal(15), c, "Kiez klein"));
+        db.addExpense(new Expense(2, ExpenseCategory.categories.get(1), new BigDecimal(50), c, "new jacket"));
+
+        c.set(2016, Calendar.FEBRUARY, 12);
+        db.addExpense(new Expense(3, ExpenseCategory.categories.get(2), new BigDecimal(6), c, "morning Coffee"));
+        db.addExpense(new Expense(4, ExpenseCategory.categories.get(3), new BigDecimal(10), c, "BioMarket"));
+        db.addExpense(new Expense(5, ExpenseCategory.categories.get(4), new BigDecimal(25), c, "Pizza"));
+
+        c.set(2016, Calendar.FEBRUARY, 13);
+        db.addExpense(new Expense(6, ExpenseCategory.categories.get(5), new BigDecimal(10), c, "impala coffee"));
+        db.addExpense(new Expense(7, ExpenseCategory.categories.get(6), new BigDecimal(15), c, "Saturday groceries"));
+
+        c.set(2016, Calendar.FEBRUARY, 14);
+        db.addExpense(new Expense(8, ExpenseCategory.categories.get(7), new BigDecimal(5.5), c, "Pasta bar"));
+
+        c.set(2016, Calendar.FEBRUARY, 17);
+        db.addExpense(new Expense(9, ExpenseCategory.categories.get(0), new BigDecimal(3), c, "bio market"));
+        db.addExpense(new Expense(10, ExpenseCategory.categories.get(0), new BigDecimal(9), c, "U bahn"));
+
+        c.set(2016, Calendar.FEBRUARY, 18);
+        db.addExpense(new Expense(11, ExpenseCategory.categories.get(2), new BigDecimal(5), c, "Beer with friends"));
     }
 
     @Override
@@ -80,9 +100,10 @@ public class ExpenseListFragment extends Fragment {
             }
         });
 
-        ListView listView_expenses = (ListView) rootView.findViewById(R.id.listview_expenses);
         emptyMessageView = (TextView) rootView.findViewById(R.id.listview_empty_message);
-        populateExpenses(listView_expenses);
+        stickyList = (StickyListHeadersListView) rootView.findViewById(R.id.stickylistview_expenses);
+        populateStickyExpenses(stickyList);
+
         return rootView;
     }
 }
