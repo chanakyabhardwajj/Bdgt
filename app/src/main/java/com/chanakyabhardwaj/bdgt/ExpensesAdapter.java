@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -70,16 +71,29 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         Calendar expenseDate = Calendar.getInstance();
         String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
         expenseDate.setTimeInMillis(Long.parseLong(dt));
+        int expenseDayOfYear = expenseDate.get(Calendar.DAY_OF_YEAR);
+        int todayDayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
-        Calendar current = Calendar.getInstance();
-
-        if (current.get(Calendar.DAY_OF_YEAR) == expenseDate.get(Calendar.DAY_OF_YEAR)) {
+        if (todayDayOfYear == expenseDayOfYear) {
             holder.date.setText("Today");
         } else {
             holder.date.setText(new SimpleDateFormat("dd MMM").format(expenseDate.getTime()));
         }
 
-//        holder.total.setText(Integer.parseInt(holder.total.getText().toString()) + 1);
+
+        BigDecimal expenseByDay = new BigDecimal(0);
+
+        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
+            Calendar expDate = Calendar.getInstance();
+            String dtStr = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
+            String amtStr = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
+            expDate.setTimeInMillis(Long.parseLong(dtStr));
+
+            if (expDate.get(Calendar.DAY_OF_YEAR) == expenseDayOfYear) {
+                expenseByDay = expenseByDay.add(new BigDecimal(amtStr));
+            }
+        }
+        holder.total.setText(expenseByDay.toString() + "€");
         return convertView;
     }
 

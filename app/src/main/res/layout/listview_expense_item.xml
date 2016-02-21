@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:paddingBottom="8dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="8dp">
 
         <LinearLayout
