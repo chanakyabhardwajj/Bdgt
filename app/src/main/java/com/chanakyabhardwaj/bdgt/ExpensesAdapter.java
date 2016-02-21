@@ -1,71 +1,82 @@
 package com.chanakyabhardwaj.bdgt;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class ExpensesAdapter extends ArrayAdapter<Expense> implements StickyListHeadersAdapter {
-    public ExpensesAdapter(Context context, ArrayList<Expense> expenses) {
-        super(context, R.layout.listview_expense_item, expenses);
+
+public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersAdapter {
+    private LayoutInflater inflater;
+
+    public ExpensesAdapter(Context context, Cursor cursor, int flags) {
+        super(context, cursor, 0);
+        mCursor = cursor;
+        mContext = context;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final Expense expense = getItem(position);
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.listview_expense_item, parent, false);
-            viewHolder.category = (TextView) convertView.findViewById(R.id.listview_expense_item_category);
-            viewHolder.amount = (TextView) convertView.findViewById(R.id.listview_expense_item_amount);
-            viewHolder.description = (TextView) convertView.findViewById(R.id.listview_expense_item_description);
-            convertView.setTag(viewHolder);
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return LayoutInflater.from(context).inflate(R.layout.listview_expense_item, parent, false);
+    }
+
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        TextView category = (TextView) view.findViewById(R.id.listview_expense_item_category);
+        TextView amount = (TextView) view.findViewById(R.id.listview_expense_item_amount);
+        TextView description = (TextView) view.findViewById(R.id.listview_expense_item_description);
+
+        // Extract properties from cursor
+        String expenseCategory = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY));
+        String expenseAmount = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
+        String expenseDescription = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DESCRIPTION));
+
+        amount.setText(expenseAmount + "€");
+        if (expenseCategory.length() > 0) {
+            category.setText(expenseCategory);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            category.setText("uncategorized");
         }
+        description.setText(expenseDescription);
 
-        if (expense.category.length() > 0) {
-            viewHolder.category.setText(expense.category);
-        } else {
-            viewHolder.category.setText("uncategorized");
-        }
-
-        viewHolder.amount.setText(expense.amount.toString() + "€");
-        viewHolder.description.setText(expense.description);
-
-        return convertView;
     }
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        HeaderViewHolder holder;
-        final Expense expense = getItem(position);
+        ExpenseHeaderHolder holder;
+
         if (convertView == null) {
-            holder = new HeaderViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
+            holder = new ExpenseHeaderHolder();
             convertView = inflater.inflate(R.layout.listview_expense_header, parent, false);
             holder.date = (TextView) convertView.findViewById(R.id.listview_expense_header_date);
             holder.total = (TextView) convertView.findViewById(R.id.listview_expense_header_total);
             convertView.setTag(holder);
         } else {
-            holder = (HeaderViewHolder) convertView.getTag();
+            holder = (ExpenseHeaderHolder) convertView.getTag();
         }
 
+        mCursor.moveToPosition(position);
+
+        Calendar expenseDate = Calendar.getInstance();
+        String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
+        expenseDate.setTimeInMillis(Long.parseLong(dt));
+
         Calendar current = Calendar.getInstance();
-        if (current.get(Calendar.DAY_OF_YEAR) == expense.date.get(Calendar.DAY_OF_YEAR)) {
+
+        if (current.get(Calendar.DAY_OF_YEAR) == expenseDate.get(Calendar.DAY_OF_YEAR)) {
             holder.date.setText("Today");
         } else {
-            holder.date.setText(new SimpleDateFormat("dd MMM").format(expense.date.getTime()));
+            holder.date.setText(new SimpleDateFormat("dd MMM").format(expenseDate.getTime()));
         }
 
 //        holder.total.setText(Integer.parseInt(holder.total.getText().toString()) + 1);
@@ -74,17 +85,22 @@ public class ExpensesAdapter extends ArrayAdapter<Expense> implements StickyList
 
     @Override
     public long getHeaderId(int position) {
-        final Expense expense = getItem(position);
-        return Integer.parseInt(new SimpleDateFormat("Dyyyy").format(expense.date.getTime()));
+        mCursor.moveToPosition(position);
+
+        String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
+        Calendar expenseDate = Calendar.getInstance();
+        expenseDate.setTimeInMillis(Long.parseLong(dt));
+
+        return Integer.parseInt(new SimpleDateFormat("Dyyyy").format(expenseDate.getTime()));
     }
 
-    private static class ViewHolder {
+    private static class ExpenseItemHolder {
         TextView category;
         TextView amount;
         TextView description;
     }
 
-    private static class HeaderViewHolder {
+    private static class ExpenseHeaderHolder {
         TextView date;
         TextView total;
     }

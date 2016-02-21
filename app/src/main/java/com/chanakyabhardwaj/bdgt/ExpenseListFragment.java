@@ -1,5 +1,7 @@
 package com.chanakyabhardwaj.bdgt;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -8,22 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 
 public class ExpenseListFragment extends Fragment {
-    ExpensesAdapter expensesAdapter;
     TextView emptyMessageView;
-    StickyListHeadersListView stickyList;
-    ArrayList<Expense> allExpenses;
+    StickyListHeadersListView stickyListView;
 
     public ExpenseListFragment() {
     }
@@ -36,23 +33,22 @@ public class ExpenseListFragment extends Fragment {
         transaction.commit();
     }
 
-    void populateStickyExpenses(StickyListHeadersListView stickyListView) {
+    void populateExpenses() {
         stickyListView.setEmptyView(emptyMessageView);
-        allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
-        if (allExpenses.size() < 10) {
-            addFakeData();
-            allExpenses = ExpenseDBHelper.getInstance(getContext()).getAllExpenses();
-        }
-        Collections.sort(allExpenses);
 
-        expensesAdapter = new ExpensesAdapter(getContext(), allExpenses);
+        SQLiteDatabase db = ExpenseDBHelper.getInstance(getContext()).getWritableDatabase();
+        Cursor expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
+                " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
+                " DESC", null);
+
+        final ExpensesAdapter expensesAdapter = new ExpensesAdapter(getContext(), expCursor, 0);
         stickyListView.setAdapter(expensesAdapter);
 
         stickyListView.setClickable(true);
         stickyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                MainActivity.activeExpenseId = allExpenses.get(position)._id;
+            public void onItemClick(AdapterView<?> parent, View v, final int position, long id) {
+                MainActivity.activeExpenseId = (int) stickyListView.getAdapter().getItemId(position);
                 setExpenseItemFragment();
             }
         });
@@ -101,8 +97,8 @@ public class ExpenseListFragment extends Fragment {
         });
 
         emptyMessageView = (TextView) rootView.findViewById(R.id.listview_empty_message);
-        stickyList = (StickyListHeadersListView) rootView.findViewById(R.id.stickylistview_expenses);
-        populateStickyExpenses(stickyList);
+        stickyListView = (StickyListHeadersListView) rootView.findViewById(R.id.stickylistview_expenses);
+        populateExpenses();
 
         return rootView;
     }
