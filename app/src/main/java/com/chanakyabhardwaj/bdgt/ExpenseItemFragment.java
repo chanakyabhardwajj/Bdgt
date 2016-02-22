@@ -9,22 +9,15 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -143,16 +136,27 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseCategoryView.setText(activeExpense.category);
         }
 
+        expenseCategoryView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    expenseCategoryTags.setVisibility(View.VISIBLE);
+                } else {
+                    expenseCategoryTags.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
         expenseCategoryTags.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(int position, String text) {
                 expenseCategoryView.setText(text);
                 expenseCategoryView.setSelection(expenseCategoryView.getText().length());
-                expenseCategoryView.requestFocus();
             }
 
             @Override
-            public void onTagLongClick(final int position, String text) {}
+            public void onTagLongClick(final int position, String text) {
+            }
         });
 
         expenseCategoryTags.setTags(categories);
@@ -214,7 +218,7 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseAmountView.setError(null);
             return true;
         } catch (Exception e) {
-            expenseAmountView.setError(getText(R.string.amount_error_message));
+            expenseAmountView.setError(getText(R.string.expense_form_amount_error));
             return false;
         }
     }

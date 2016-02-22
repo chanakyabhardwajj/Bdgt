@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class ExpenseListFragment extends Fragment {
     TextView emptyMessageView;
     StickyListHeadersListView stickyListView;
+    TextView expenseSummaryView;
 
     public ExpenseListFragment() {
     }
@@ -32,6 +34,17 @@ public class ExpenseListFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+    
+    void populateSummary(Cursor cursor) {
+        BigDecimal total = new BigDecimal(0);
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            String amtStr = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
+            total = total.add(new BigDecimal(amtStr));
+        }
+
+        Log.v(">>>>>>>", total.toString());
+        expenseSummaryView.setText("You have spent " + total.toString() + " euros so far.");
+    }
 
     void populateExpenses() {
         stickyListView.setEmptyView(emptyMessageView);
@@ -41,9 +54,16 @@ public class ExpenseListFragment extends Fragment {
                 " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
                 " DESC", null);
 
+        if (expCursor.getCount() < 10) {
+            addFakeData();
+            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
+                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
+                    " DESC", null);
+        }
+
         final ExpensesAdapter expensesAdapter = new ExpensesAdapter(getContext(), expCursor, 0);
         stickyListView.setAdapter(expensesAdapter);
-
+        populateSummary(expCursor);
         stickyListView.setClickable(true);
         stickyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,7 +78,6 @@ public class ExpenseListFragment extends Fragment {
         ExpenseDBHelper db = ExpenseDBHelper.getInstance(getContext());
         Calendar c = Calendar.getInstance();
 
-        c.set(2016, Calendar.FEBRUARY, 10);
         db.addExpense(new Expense(1, ExpenseCategory.categories.get(0), new BigDecimal(15), c, "Kiez klein"));
         db.addExpense(new Expense(2, ExpenseCategory.categories.get(1), new BigDecimal(50), c, "new jacket"));
 
@@ -97,6 +116,7 @@ public class ExpenseListFragment extends Fragment {
         });
 
         emptyMessageView = (TextView) rootView.findViewById(R.id.listview_empty_message);
+        expenseSummaryView = (TextView) rootView.findViewById(R.id.expense_summary_view);
         stickyListView = (StickyListHeadersListView) rootView.findViewById(R.id.stickylistview_expenses);
         populateExpenses();
 

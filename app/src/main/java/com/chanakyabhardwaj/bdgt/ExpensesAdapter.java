@@ -35,12 +35,10 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
     public void bindView(View view, Context context, Cursor cursor) {
         TextView category = (TextView) view.findViewById(R.id.listview_expense_item_category);
         TextView amount = (TextView) view.findViewById(R.id.listview_expense_item_amount);
-        TextView description = (TextView) view.findViewById(R.id.listview_expense_item_description);
 
         // Extract properties from cursor
         String expenseCategory = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY));
         String expenseAmount = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
-        String expenseDescription = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DESCRIPTION));
 
         amount.setText(expenseAmount + "€");
         if (expenseCategory.length() > 0) {
@@ -48,8 +46,6 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         } else {
             category.setText("uncategorized");
         }
-        description.setText(expenseDescription);
-
     }
 
     @Override
@@ -93,6 +89,7 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
                 expenseByDay = expenseByDay.add(new BigDecimal(amtStr));
             }
         }
+
         holder.total.setText(expenseByDay.toString() + "€");
         return convertView;
     }
@@ -104,14 +101,7 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
         Calendar expenseDate = Calendar.getInstance();
         expenseDate.setTimeInMillis(Long.parseLong(dt));
-
         return Integer.parseInt(new SimpleDateFormat("Dyyyy").format(expenseDate.getTime()));
-    }
-
-    private static class ExpenseItemHolder {
-        TextView category;
-        TextView amount;
-        TextView description;
     }
 
     private static class ExpenseHeaderHolder {

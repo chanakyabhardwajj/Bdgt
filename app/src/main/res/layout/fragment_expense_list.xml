@@ -4,26 +4,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/listview_empty_message"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/empty_message"
-        android:textSize="20dp" />
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/stickylistview_expenses"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_18dp"
-        app:layout_anchor="@id/stickylistview_expenses"
-        app:layout_anchorGravity="bottom|right|end" />
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/listview_empty_message"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/empty_message"
+            android:textSize="20dp" />
+
+
+        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="6dp">
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/expense_summary_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="30dp"
+                android:text="summary"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20dp" />
+
+        </android.support.v7.widget.CardView>
+
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/stickylistview_expenses"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="1dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_white_18dp"
+            app:layout_anchor="@id/stickylistview_expenses"
+            app:layout_anchorGravity="bottom|right|end" />
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>
