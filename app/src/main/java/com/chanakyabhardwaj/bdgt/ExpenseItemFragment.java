@@ -214,7 +214,11 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
 
     public boolean validateForm() {
         try {
-            new BigDecimal(expenseAmountView.getText().toString());
+            BigDecimal amount = new BigDecimal(expenseAmountView.getText().toString());
+            if (amount.equals(BigDecimal.ZERO)) {
+                expenseAmountView.setError(getText(R.string.expense_form_amount_error));
+                return false;
+            }
             expenseAmountView.setError(null);
             return true;
         } catch (Exception e) {

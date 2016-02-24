@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -22,7 +22,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class ExpenseListFragment extends Fragment {
     TextView emptyMessageView;
     StickyListHeadersListView stickyListView;
-    TextView expenseSummaryView;
+    LinearLayout expenseSummaryView;
+    TextView expenseSummaryViewTitle;
+    LinearLayout expenseSummaryViewWeekBox;
+    LinearLayout expenseSummaryViewMonthBox;
+    TextView expenseSummaryViewToday;
+    TextView expenseSummaryViewWeek;
+    TextView expenseSummaryViewMonth;
 
     public ExpenseListFragment() {
     }
@@ -34,36 +40,60 @@ public class ExpenseListFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
-    
-    void populateSummary(Cursor cursor) {
-        BigDecimal total = new BigDecimal(0);
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            String amtStr = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
-            total = total.add(new BigDecimal(amtStr));
+
+    public void populateSummary(Cursor cursor) {
+        BigDecimal[] totals = ExpensesAdapter.calculateExpenseSummary(cursor, Calendar.getInstance());
+
+        BigDecimal totalDay = totals[0];
+        BigDecimal totalWeek = totals[1];
+        BigDecimal totalMonth = totals[2];
+        BigDecimal total = totals[3];
+
+        String titleMsg = getResources().getString(R.string.expense_summary_view_title);
+        expenseSummaryViewTitle.setText(titleMsg);
+        expenseSummaryViewToday.setText(totalDay.toString() + "€");
+        expenseSummaryViewWeek.setText(totalWeek.toString() + "€");
+        expenseSummaryViewMonth.setText(totalMonth.toString() + "€");
+
+        if (totalDay.equals(totalWeek)) {
+            expenseSummaryViewWeekBox.setVisibility(View.GONE);
+        } else {
+            expenseSummaryViewWeekBox.setVisibility(View.VISIBLE);
         }
 
-        Log.v(">>>>>>>", total.toString());
-        expenseSummaryView.setText("You have spent " + total.toString() + " euros so far.");
+        if (totalWeek.equals(totalMonth)) {
+            expenseSummaryViewMonthBox.setVisibility(View.GONE);
+        } else {
+            expenseSummaryViewMonthBox.setVisibility(View.VISIBLE);
+        }
     }
 
     void populateExpenses() {
-        stickyListView.setEmptyView(emptyMessageView);
-
         SQLiteDatabase db = ExpenseDBHelper.getInstance(getContext()).getWritableDatabase();
         Cursor expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
                 " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
                 " DESC", null);
 
-        if (expCursor.getCount() < 10) {
-            addFakeData();
-            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
-                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
-                    " DESC", null);
+//        if (expCursor.getCount() < 10) {
+//            addFakeData();
+//            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
+//                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
+//                    " DESC", null);
+//        }
+
+        if (expCursor.getCount() == 0) {
+            emptyMessageView.setVisibility(View.VISIBLE);
+            expenseSummaryView.setVisibility(View.GONE);
+            stickyListView.setVisibility(View.GONE);
+        } else {
+            emptyMessageView.setVisibility(View.GONE);
+            expenseSummaryView.setVisibility(View.VISIBLE);
+            stickyListView.setVisibility(View.VISIBLE);
         }
 
         final ExpensesAdapter expensesAdapter = new ExpensesAdapter(getContext(), expCursor, 0);
         stickyListView.setAdapter(expensesAdapter);
-        populateSummary(expCursor);
+
         stickyListView.setClickable(true);
         stickyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,6 +102,8 @@ public class ExpenseListFragment extends Fragment {
                 setExpenseItemFragment();
             }
         });
+
+        populateSummary(expCursor);
     }
 
     void addFakeData() {
@@ -116,10 +148,17 @@ public class ExpenseListFragment extends Fragment {
         });
 
         emptyMessageView = (TextView) rootView.findViewById(R.id.listview_empty_message);
-        expenseSummaryView = (TextView) rootView.findViewById(R.id.expense_summary_view);
         stickyListView = (StickyListHeadersListView) rootView.findViewById(R.id.stickylistview_expenses);
-        populateExpenses();
 
+        expenseSummaryView = (LinearLayout) rootView.findViewById(R.id.expense_summary_view);
+        expenseSummaryViewTitle = (TextView) rootView.findViewById(R.id.expense_summary_view_title);
+        expenseSummaryViewToday = (TextView) rootView.findViewById(R.id.expense_summary_view_today);
+        expenseSummaryViewWeek = (TextView) rootView.findViewById(R.id.expense_summary_view_week);
+        expenseSummaryViewMonth = (TextView) rootView.findViewById(R.id.expense_summary_view_month);
+        expenseSummaryViewWeekBox = (LinearLayout) rootView.findViewById(R.id.expense_summary_view_week_box);
+        expenseSummaryViewMonthBox = (LinearLayout) rootView.findViewById(R.id.expense_summary_view_month_box);
+
+        populateExpenses();
         return rootView;
     }
 }

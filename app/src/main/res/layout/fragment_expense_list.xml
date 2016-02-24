@@ -1,46 +1,113 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        <TextView
             android:id="@+id/listview_empty_message"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/empty_message"
             android:textSize="20dp" />
 
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
+            android:id="@+id/expense_summary_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardBackgroundColor="@color/white"
-            card_view:cardCornerRadius="2dp"
-            card_view:cardElevation="6dp">
+            android:background="@color/white"
+            android:orientation="vertical">
 
-            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/expense_summary_view"
+            <TextView
+                android:id="@+id/expense_summary_view_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/white"
                 android:gravity="center"
-                android:padding="30dp"
-                android:text="summary"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp" />
+                android:padding="8dp"
+                android:text="@string/expense_summary_view_title"
+                android:textSize="16sp" />
 
-        </android.support.v7.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:id="@+id/expense_summary_view_today_box"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/expense_summary_view_today"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="today" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/expense_summary_view_week_box"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/expense_summary_view_week"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="this week" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expense_summary_view_month_box"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/expense_summary_view_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="this month" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
             android:id="@+id/stickylistview_expenses"
@@ -57,7 +124,6 @@
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_white_18dp"
-            app:layout_anchor="@id/stickylistview_expenses"
             app:layout_anchorGravity="bottom|right|end" />
     </LinearLayout>
 

@@ -6,7 +6,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/Widget.TextView.Custom</item>
-        <item name="android:editTextStyle">@style/Widget.EditText.Custom</item>
+
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="android:editTextColor">@color/textColorPrimary</item>
+        <item name="colorControlHighlight">@color/yellow</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -14,18 +19,30 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Widget.TextView.Custom" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
-    <style name="Widget.EditText.Custom" parent="@android:style/Widget.EditText">
-        <item name="android:textAppearance">@color/textColorPrimary</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:editTextColor">@color/textColorPrimary</item>
+    <!--Button styles used in expense-item-form-->
+    <style name="ButtonStyle" parent="CardView">
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ButtonTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
     </style>
 
 </resources>

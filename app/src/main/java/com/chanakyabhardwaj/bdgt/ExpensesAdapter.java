@@ -36,11 +36,10 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         TextView category = (TextView) view.findViewById(R.id.listview_expense_item_category);
         TextView amount = (TextView) view.findViewById(R.id.listview_expense_item_amount);
 
-        // Extract properties from cursor
-        String expenseCategory = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY));
-        String expenseAmount = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
+        String expenseCategory = ExpenseDBHelper.extractCategoryFromCursor(cursor);
+        BigDecimal expenseAmount = ExpenseDBHelper.extractAmountFromCursor(cursor);
 
-        amount.setText(expenseAmount + "€");
+        amount.setText(expenseAmount.toString() + "€");
         if (expenseCategory.length() > 0) {
             category.setText(expenseCategory);
         } else {
@@ -64,9 +63,7 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
 
         mCursor.moveToPosition(position);
 
-        Calendar expenseDate = Calendar.getInstance();
-        String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
-        expenseDate.setTimeInMillis(Long.parseLong(dt));
+        Calendar expenseDate = ExpenseDBHelper.extractDateFromCursor(mCursor);
         int expenseDayOfYear = expenseDate.get(Calendar.DAY_OF_YEAR);
         int todayDayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
@@ -76,31 +73,15 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
             holder.date.setText(new SimpleDateFormat("dd MMM").format(expenseDate.getTime()));
         }
 
-
-        BigDecimal expenseByDay = new BigDecimal(0);
-
-        for (mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()) {
-            Calendar expDate = Calendar.getInstance();
-            String dtStr = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
-            String amtStr = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
-            expDate.setTimeInMillis(Long.parseLong(dtStr));
-
-            if (expDate.get(Calendar.DAY_OF_YEAR) == expenseDayOfYear) {
-                expenseByDay = expenseByDay.add(new BigDecimal(amtStr));
-            }
-        }
-
-        holder.total.setText(expenseByDay.toString() + "€");
+        BigDecimal dayTotal = calculateExpenseSummary(mCursor, expenseDate)[0];
+        holder.total.setText(dayTotal.toString() + "€");
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
         mCursor.moveToPosition(position);
-
-        String dt = mCursor.getString(mCursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
-        Calendar expenseDate = Calendar.getInstance();
-        expenseDate.setTimeInMillis(Long.parseLong(dt));
+        Calendar expenseDate = ExpenseDBHelper.extractDateFromCursor(mCursor);
         return Integer.parseInt(new SimpleDateFormat("Dyyyy").format(expenseDate.getTime()));
     }
 
@@ -108,4 +89,38 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         TextView date;
         TextView total;
     }
+
+
+    public static BigDecimal[] calculateExpenseSummary(Cursor cursor, Calendar relativeToDate) {
+        BigDecimal totalDay = new BigDecimal(0);
+        BigDecimal totalWeek = new BigDecimal(0);
+        BigDecimal totalMonth = new BigDecimal(0);
+        BigDecimal total = new BigDecimal(0);
+
+        int day = relativeToDate.get(Calendar.DAY_OF_YEAR);
+        int week = relativeToDate.get(Calendar.WEEK_OF_YEAR);
+        int month = relativeToDate.get(Calendar.MONTH);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Calendar expenseDate = ExpenseDBHelper.extractDateFromCursor(cursor);
+            BigDecimal amount = ExpenseDBHelper.extractAmountFromCursor(cursor);
+
+            if (expenseDate.get(Calendar.DAY_OF_YEAR) == day) {
+                totalDay = totalDay.add(amount);
+            }
+
+            if (expenseDate.get(Calendar.WEEK_OF_YEAR) == week) {
+                totalWeek = totalWeek.add(amount);
+            }
+
+            if (expenseDate.get(Calendar.MONTH) == month) {
+                totalMonth = totalMonth.add(amount);
+            }
+
+            total = total.add(amount);
+        }
+
+        return new BigDecimal[]{totalDay, totalWeek, totalMonth, total};
+    }
+
 }
