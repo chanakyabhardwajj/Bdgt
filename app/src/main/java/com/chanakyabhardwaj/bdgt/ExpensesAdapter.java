@@ -25,11 +25,42 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         inflater = LayoutInflater.from(context);
     }
 
+    public static BigDecimal[] calculateExpenseSummary(Cursor cursor, Calendar relativeToDate) {
+        BigDecimal totalDay = new BigDecimal(0);
+        BigDecimal totalWeek = new BigDecimal(0);
+        BigDecimal totalMonth = new BigDecimal(0);
+        BigDecimal total = new BigDecimal(0);
+
+        int day = relativeToDate.get(Calendar.DAY_OF_YEAR);
+        int week = relativeToDate.get(Calendar.WEEK_OF_YEAR);
+        int month = relativeToDate.get(Calendar.MONTH);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            Calendar expenseDate = ExpenseDBHelper.extractDateFromCursor(cursor);
+            BigDecimal amount = ExpenseDBHelper.extractAmountFromCursor(cursor);
+
+            if (expenseDate.get(Calendar.DAY_OF_YEAR) == day) {
+                totalDay = totalDay.add(amount);
+            }
+
+            if (expenseDate.get(Calendar.WEEK_OF_YEAR) == week) {
+                totalWeek = totalWeek.add(amount);
+            }
+
+            if (expenseDate.get(Calendar.MONTH) == month) {
+                totalMonth = totalMonth.add(amount);
+            }
+
+            total = total.add(amount);
+        }
+
+        return new BigDecimal[]{totalDay, totalWeek, totalMonth, total};
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return LayoutInflater.from(context).inflate(R.layout.listview_expense_item, parent, false);
     }
-
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
@@ -88,39 +119,6 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
     private static class ExpenseHeaderHolder {
         TextView date;
         TextView total;
-    }
-
-
-    public static BigDecimal[] calculateExpenseSummary(Cursor cursor, Calendar relativeToDate) {
-        BigDecimal totalDay = new BigDecimal(0);
-        BigDecimal totalWeek = new BigDecimal(0);
-        BigDecimal totalMonth = new BigDecimal(0);
-        BigDecimal total = new BigDecimal(0);
-
-        int day = relativeToDate.get(Calendar.DAY_OF_YEAR);
-        int week = relativeToDate.get(Calendar.WEEK_OF_YEAR);
-        int month = relativeToDate.get(Calendar.MONTH);
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            Calendar expenseDate = ExpenseDBHelper.extractDateFromCursor(cursor);
-            BigDecimal amount = ExpenseDBHelper.extractAmountFromCursor(cursor);
-
-            if (expenseDate.get(Calendar.DAY_OF_YEAR) == day) {
-                totalDay = totalDay.add(amount);
-            }
-
-            if (expenseDate.get(Calendar.WEEK_OF_YEAR) == week) {
-                totalWeek = totalWeek.add(amount);
-            }
-
-            if (expenseDate.get(Calendar.MONTH) == month) {
-                totalMonth = totalMonth.add(amount);
-            }
-
-            total = total.add(amount);
-        }
-
-        return new BigDecimal[]{totalDay, totalWeek, totalMonth, total};
     }
 
 }
