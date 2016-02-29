@@ -46,7 +46,6 @@ public class ExpenseListFragment extends Fragment {
         BigDecimal totalDay = totals[0];
         BigDecimal totalWeek = totals[1];
         BigDecimal totalMonth = totals[2];
-        BigDecimal total = totals[3];
 
         String titleMsg = getResources().getString(R.string.expense_summary_view_title);
         expenseSummaryViewTitle.setText(titleMsg);
@@ -73,12 +72,12 @@ public class ExpenseListFragment extends Fragment {
                 " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
                 " DESC", null);
 
-//        if (expCursor.getCount() < 10) {
-//            addFakeData();
-//            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
-//                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
-//                    " DESC", null);
-//        }
+        if (expCursor.getCount() < 10) {
+            addFakeData();
+            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
+                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
+                    " DESC", null);
+        }
 
         if (expCursor.getCount() == 0) {
             emptyMessageView.setVisibility(View.VISIBLE);

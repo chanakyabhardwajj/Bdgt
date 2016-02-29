@@ -135,17 +135,6 @@ public class ExpenseItemFragment extends Fragment implements DatePickerDialog.On
             expenseCategoryView.setText(activeExpense.category);
         }
 
-        expenseCategoryView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    expenseCategoryTags.setVisibility(View.VISIBLE);
-                } else {
-                    expenseCategoryTags.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
         expenseCategoryTags.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(int position, String text) {
