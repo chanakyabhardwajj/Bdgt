@@ -11,15 +11,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * Created by chanakya.bharwaj on 24/01/16.
- */
-
 public class ExpenseDBHelper extends SQLiteOpenHelper {
-    private static ExpenseDBHelper dbInstance;
-
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Expense.db";
+    private static ExpenseDBHelper dbInstance;
+
+    private ExpenseDBHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
     public static synchronized ExpenseDBHelper getInstance(Context context) {
         if (dbInstance == null) {
@@ -28,10 +27,21 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
         return dbInstance;
     }
 
-    private ExpenseDBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public static Calendar extractDateFromCursor(Cursor cursor) {
+        Calendar expenseDate = Calendar.getInstance();
+        String dateString = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
+        expenseDate.setTimeInMillis(Long.parseLong(dateString));
+        return expenseDate;
     }
 
+    public static BigDecimal extractAmountFromCursor(Cursor cursor) {
+        String amount = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
+        return new BigDecimal(amount);
+    }
+
+    public static String extractCategoryFromCursor(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY));
+    }
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(ExpenseContract.SQL_CREATE_ENTRIES);
@@ -77,31 +87,6 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
         return db.update(ExpenseContract.ExpenseEntry.TABLE_NAME, values, ExpenseContract.ExpenseEntry._ID + " = ?",
                 new String[]{String.valueOf(expense._id)});
     }
-
-/*    public ArrayList<Expense> getAllExpenses() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        String[] allColumns = {ExpenseContract.ExpenseEntry._ID,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DESCRIPTION,
-                ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE};
-
-        ArrayList<Expense> expenses = new ArrayList<Expense>();
-
-        Cursor cursor = db.query(ExpenseContract.ExpenseEntry.TABLE_NAME,
-                allColumns, null, null, null, null, null);
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            Expense expense = cursorToExpense(cursor);
-            expenses.add(expense);
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-        return expenses;
-    }*/
 
     public Expense getExpenseById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -157,21 +142,5 @@ public class ExpenseDBHelper extends SQLiteOpenHelper {
         expense.setCategory(cursor.getString(cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY)));
         expense.setDate(cursor.getLong(cursor.getColumnIndex(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE)));
         return expense;
-    }
-
-    public static Calendar extractDateFromCursor(Cursor cursor) {
-        Calendar expenseDate = Calendar.getInstance();
-        String dateString = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE));
-        expenseDate.setTimeInMillis(Long.parseLong(dateString));
-        return expenseDate;
-    }
-
-    public static BigDecimal extractAmountFromCursor(Cursor cursor) {
-        String amount = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_AMOUNT));
-        return new BigDecimal(amount);
-    }
-
-    public static String extractCategoryFromCursor(Cursor cursor) {
-        return cursor.getString(cursor.getColumnIndexOrThrow(ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_CATEGORY));
     }
 }

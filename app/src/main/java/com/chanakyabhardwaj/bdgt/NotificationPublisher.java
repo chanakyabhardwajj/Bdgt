@@ -9,24 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
+import android.support.v7.preference.PreferenceManager;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-/**
- * Created by chanakya.bharwaj on 22/02/16.
- */
 public class NotificationPublisher extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
-
-    public void onReceive(Context context, Intent intent) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = intent.getParcelableExtra(NOTIFICATION);
-        int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-        notificationManager.notify(id, notification);
-    }
 
     private static Notification buildNotification(Context context) {
         Notification.Builder builder = new Notification.Builder(context);
@@ -42,15 +31,15 @@ public class NotificationPublisher extends BroadcastReceiver {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
 
-        Notification notification =  builder.build();
+        Notification notification = builder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL; // Cancel the notification after its selected
 
         return notification;
     }
 
     public static void scheduleNotification(Context context) {
-        SharedPreferences mSettings = context.getSharedPreferences(MainActivity.SHARED_PREFS_FILENAME, 0);
-        boolean alarmSet = mSettings.getBoolean(context.getString(R.string.preferences_alarm_key), false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean alarmSet = sharedPreferences.getBoolean(context.getString(R.string.preferences_alarm_key), false);
 
         if (alarmSet) {
             Notification notification = buildNotification(context);
@@ -61,16 +50,14 @@ public class NotificationPublisher extends BroadcastReceiver {
 
             Calendar timeToNotify = Calendar.getInstance();
             timeToNotify.set(Calendar.HOUR_OF_DAY, 20);
-            timeToNotify.set(Calendar.MINUTE, 0);
+            timeToNotify.set(Calendar.MINUTE, 00);
 
-            if(timeToNotify.before(Calendar.getInstance())) {
+            if (timeToNotify.before(Calendar.getInstance())) {
                 timeToNotify.add(Calendar.DAY_OF_MONTH, 1);
             }
 
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timeToNotify.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-            Log.v("ALARM : ON - ", new SimpleDateFormat("hh:mm, dd MMM").format(timeToNotify.getTime()));
         } else {
             Notification notification = buildNotification(context);
             Intent notificationIntent = new Intent(context, NotificationPublisher.class);
@@ -80,8 +67,13 @@ public class NotificationPublisher extends BroadcastReceiver {
 
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.cancel(pendingIntent);
-            Log.v("ALARM : ", "OFF");
         }
+    }
 
+    public void onReceive(Context context, Intent intent) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = intent.getParcelableExtra(NOTIFICATION);
+        int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+        notificationManager.notify(id, notification);
     }
 }

@@ -18,7 +18,6 @@ import java.util.Calendar;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-
 public class ExpenseListFragment extends Fragment {
     TextView emptyMessageView;
     StickyListHeadersListView stickyListView;
@@ -110,27 +109,27 @@ public class ExpenseListFragment extends Fragment {
         ExpenseDBHelper db = ExpenseDBHelper.getInstance(getContext());
         Calendar c = Calendar.getInstance();
 
-        db.addExpense(new Expense(1, ExpenseCategory.categories.get(0), new BigDecimal(15), c, "Kiez klein"));
-        db.addExpense(new Expense(2, ExpenseCategory.categories.get(1), new BigDecimal(50), c, "new jacket"));
+        db.addExpense(new Expense(1, "Breakfast", new BigDecimal(15), c, "Kiez klein"));
+        db.addExpense(new Expense(2, "Clothes", new BigDecimal(50), c, "new jacket"));
 
         c.set(2016, Calendar.FEBRUARY, 12);
-        db.addExpense(new Expense(3, ExpenseCategory.categories.get(2), new BigDecimal(6), c, "morning Coffee"));
-        db.addExpense(new Expense(4, ExpenseCategory.categories.get(3), new BigDecimal(10), c, "BioMarket"));
-        db.addExpense(new Expense(5, ExpenseCategory.categories.get(4), new BigDecimal(25), c, "Pizza"));
+        db.addExpense(new Expense(3, "Coffee", new BigDecimal(6), c, "morning Coffee"));
+        db.addExpense(new Expense(4, "Groceries", new BigDecimal(10), c, "BioMarket"));
+        db.addExpense(new Expense(5, "Dinner", new BigDecimal(25), c, "Pizza"));
 
         c.set(2016, Calendar.FEBRUARY, 13);
-        db.addExpense(new Expense(6, ExpenseCategory.categories.get(5), new BigDecimal(10), c, "impala coffee"));
-        db.addExpense(new Expense(7, ExpenseCategory.categories.get(6), new BigDecimal(15), c, "Saturday groceries"));
+        db.addExpense(new Expense(6, "Coffee", new BigDecimal(10), c, "impala coffee"));
+        db.addExpense(new Expense(7, "Groceries", new BigDecimal(15), c, "Saturday groceries"));
 
         c.set(2016, Calendar.FEBRUARY, 14);
-        db.addExpense(new Expense(8, ExpenseCategory.categories.get(7), new BigDecimal(5.5), c, "Pasta bar"));
+        db.addExpense(new Expense(8, "Lunch", new BigDecimal(5.5), c, "Pasta bar"));
 
         c.set(2016, Calendar.FEBRUARY, 17);
-        db.addExpense(new Expense(9, ExpenseCategory.categories.get(0), new BigDecimal(3), c, "bio market"));
-        db.addExpense(new Expense(10, ExpenseCategory.categories.get(0), new BigDecimal(9), c, "U bahn"));
+        db.addExpense(new Expense(9, "Groceries", new BigDecimal(3), c, "bio market"));
+        db.addExpense(new Expense(10, "Train tix", new BigDecimal(9), c, "U bahn"));
 
         c.set(2016, Calendar.FEBRUARY, 18);
-        db.addExpense(new Expense(11, ExpenseCategory.categories.get(2), new BigDecimal(5), c, "Beer with friends"));
+        db.addExpense(new Expense(11, "Beer", new BigDecimal(5), c, "Beer with friends"));
     }
 
     @Override
