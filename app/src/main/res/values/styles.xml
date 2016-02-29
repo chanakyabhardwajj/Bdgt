@@ -8,10 +8,11 @@
         <item name="android:textViewStyle">@style/Widget.TextView.Custom</item>
 
         <item name="android:textColorHint">@color/colorPrimary</item>
-        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/backgroundHeaderColor</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:editTextColor">@color/textColorPrimary</item>
-        <item name="colorControlHighlight">@color/yellow</item>
+        <item name="colorControlHighlight">@color/backgroundHeaderColor</item>
+        <item name="preferenceTheme">@style/PreferenceScreen</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -23,6 +24,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="PreferenceScreen" parent="PreferenceThemeOverlay">
+        <item name="android:background">@color/textColorPrimary</item>
+    </style>
+
+
     <style name="Widget.TextView.Custom" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
@@ -31,7 +37,7 @@
     <style name="ButtonStyle" parent="CardView">
         <item name="cardCornerRadius">2dp</item>
         <item name="cardElevation">6dp</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

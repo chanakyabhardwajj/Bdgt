@@ -48,6 +48,8 @@
                     android:digits="0123456789.,"
                     android:hint="@string/expense_form_amount_hint"
                     android:inputType="numberDecimal"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -72,6 +74,8 @@
                         android:layout_below="@+id/expense_top_layer"
                         android:completionThreshold="1"
                         android:hint="@string/expense_form_category_hint"
+                        android:paddingLeft="0dp"
+                        android:paddingRight="0dp"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -116,17 +120,16 @@
                     android:layout_height="wrap_content"
                     android:gravity="top"
                     android:hint="@string/expense_form_description_hint"
-                    android:inputType="textMultiLine"
-                    android:lines="3"
-                    android:maxLines="3"
-                    android:minLines="3"
-                    android:scrollbars="vertical" />
+                    android:inputType="text|textMultiLine|textCapSentences"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp" />
             </android.support.design.widget.TextInputLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/expense_description_wrapper"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -144,6 +147,7 @@
                 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     style="@style/ButtonStyle"
+                    android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@+id/create_expense_card"
                     card_view:cardBackgroundColor="@color/white">
 

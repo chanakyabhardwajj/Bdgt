@@ -1,14 +1,10 @@
 package com.chanakyabhardwaj.bdgt;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,14 +14,12 @@ import android.view.MenuItem;
 /*
 * TODO
 * color generation logic for categories
-*
-* reminder notifciations
 * settings panel for category updates
 */
 
 public class MainActivity extends AppCompatActivity {
+    public final static String SHARED_PREFS_FILENAME = "com.chanakyabhardwaj.bdgt.settings";
     public static int activeExpenseId = -1;
-    private CoordinatorLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ExpenseCategory.init();
-        mainLayout = (CoordinatorLayout) findViewById(R.id.mainLayout);
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
@@ -51,51 +44,39 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
+    public void onResume() {
+        NotificationPublisher.scheduleNotification(this);
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_settings) {
-            Snackbar snackbar = Snackbar.make(mainLayout, "Settings Clicked", Snackbar.LENGTH_LONG);
-            snackbar.show();
-            return true;
-        }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            transaction.replace(R.id.fragment_container, new SettingsFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-        if (id == R.id.menu_remind) {
-            Snackbar snackbar = Snackbar.make(mainLayout, "Remind Clicked", Snackbar.LENGTH_LONG);
-            snackbar.show();
-            scheduleNotification(getNotification(), 5000);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private Notification getNotification() {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Hey there!");
-        builder.setContentText("Don't forget to add your expenses!");
-        builder.setSmallIcon(R.drawable.ic_launcher);
-        return builder.build();
-    }
-
-    private void scheduleNotification(Notification notification, int delay) {
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

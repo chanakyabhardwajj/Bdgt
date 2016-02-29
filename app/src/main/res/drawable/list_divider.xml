@@ -3,7 +3,7 @@
     android:insetRight="@dimen/activity_horizontal_margin" >
 
     <shape android:shape="rectangle" >
-        <solid android:color="@color/yellow" />
+        <solid android:color="@color/backgroundHeaderColor" />
     </shape>
 
 </inset>

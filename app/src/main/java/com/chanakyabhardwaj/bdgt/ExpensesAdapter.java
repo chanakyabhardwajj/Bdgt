@@ -43,7 +43,7 @@ public class ExpensesAdapter extends CursorAdapter implements StickyListHeadersA
         if (expenseCategory.length() > 0) {
             category.setText(expenseCategory);
         } else {
-            category.setText("uncategorized");
+            category.setText(R.string.expense_form_uncategorized);
         }
     }
 
