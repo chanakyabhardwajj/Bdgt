@@ -30,4 +30,5 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.android.support:preference-v7:23.1.1'
+    compile 'com.diogobernardino:williamchart:2.2'
 }

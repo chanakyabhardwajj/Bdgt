@@ -28,6 +28,7 @@ public class ExpenseListFragment extends Fragment {
     TextView expenseSummaryViewToday;
     TextView expenseSummaryViewWeek;
     TextView expenseSummaryViewMonth;
+    TextView expenseSummaryViewShowChartsBtn;
 
     public ExpenseListFragment() {
     }
@@ -36,6 +37,14 @@ public class ExpenseListFragment extends Fragment {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         transaction.replace(R.id.fragment_container, new ExpenseItemFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    void setChartsFragment() {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        transaction.replace(R.id.fragment_container, new ChartsFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -131,6 +140,15 @@ public class ExpenseListFragment extends Fragment {
         db.addExpense(new Expense(11, "Beer", new BigDecimal(5), c, "Beer with friends"));
     }
 
+    private void prepareChartsButton() {
+        expenseSummaryViewShowChartsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setChartsFragment();
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -153,10 +171,12 @@ public class ExpenseListFragment extends Fragment {
         expenseSummaryViewToday = (TextView) rootView.findViewById(R.id.expense_summary_view_today);
         expenseSummaryViewWeek = (TextView) rootView.findViewById(R.id.expense_summary_view_week);
         expenseSummaryViewMonth = (TextView) rootView.findViewById(R.id.expense_summary_view_month);
+        expenseSummaryViewShowChartsBtn = (TextView) rootView.findViewById(R.id.expense_summary_view_show_charts);
         expenseSummaryViewWeekBox = (LinearLayout) rootView.findViewById(R.id.expense_summary_view_week_box);
         expenseSummaryViewMonthBox = (LinearLayout) rootView.findViewById(R.id.expense_summary_view_month_box);
 
         populateExpenses();
+        prepareChartsButton();
         return rootView;
     }
 }
