@@ -81,13 +81,6 @@ public class ExpenseListFragment extends Fragment {
                 " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
                 " DESC", null);
 
-        if (expCursor.getCount() < 10) {
-            addFakeData();
-            expCursor = db.rawQuery("SELECT  * FROM " + ExpenseContract.ExpenseEntry.TABLE_NAME +
-                    " ORDER BY " + ExpenseContract.ExpenseEntry.COLUMN_NAME_EXPENSE_DATE +
-                    " DESC", null);
-        }
-
         if (expCursor.getCount() == 0) {
             emptyMessageView.setVisibility(View.VISIBLE);
             expenseSummaryView.setVisibility(View.GONE);
